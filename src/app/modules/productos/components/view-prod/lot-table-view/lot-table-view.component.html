@@ -1,0 +1,47 @@
+<mat-card>
+  <mat-card-title class="titulo">Lotes</mat-card-title>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+
+      <!-- Columns Definition -->
+      <ng-container matColumnDef="code">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"> {{lot.code}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="operativeStatus">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Operative Status </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"
+          [ngClass]="{'status-active': lot.operativeStatus === 'Active', 'status-inactive': lot.operativeStatus === 'Inactive'}">
+          {{lot.operativeStatus}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="disponibilityState">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Disponibility State </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"> {{lot.disponibilityState}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="securityState">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Security State </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"> {{lot.securityState}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="stock">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"> {{lot.stock}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expiredDate">
+        <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Expired Date </th>
+        <td class="font-elemento" mat-cell *matCellDef="let lot"> {{lot.expiredDate | date:'mediumDate'}} </td>
+      </ng-container>
+
+      <!-- Header and Row Declarations -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-card>

@@ -1,0 +1,15 @@
+<div class="search-container">
+  <mat-form-field class="search-field" appearance="fill">
+    <mat-label>Buscar producto</mat-label>
+    <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event.option.value)">
+      <mat-option *ngFor="let product of filteredProducts | async" [value]="product">
+        {{product.name}} - {{product.concentracion}} - {{product.presentation}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button mat-fab class="search-button" (click)="sendProduct()">
+    <mat-icon>edit_square</mat-icon>
+  </button>
+</div>

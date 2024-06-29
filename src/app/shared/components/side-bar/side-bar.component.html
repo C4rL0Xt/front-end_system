@@ -1,0 +1,31 @@
+<div class="sidebar">
+  <div class="sidebar-icon">
+    <img src="assets\icons\iconMain.png">
+  </div>
+  <div>
+    <ul class="menu">
+      <li *ngFor="let option of menuOptions">
+        <a class="menu-item" routerLinkActive="active" [routerLink]="option.route">
+          <img [src]="option.image">
+          {{option.label}}
+        </a>
+      </li>
+      <!--
+      <li>
+        <a class="menu-item" routerLink="/home" routerLinkActive="active"><img src="assets\icons\home.svg">Inicio</a>
+      </li>
+      <li>
+        <a class="menu-item" routerLink="/producto" routerLinkActive="active"><img
+            src="assets\icons\capsule.svg">Productos</a>
+      </li>
+      <li>
+        <a class="menu-item" routerLink="/documentos" routerLinkActive="active"><img
+            src="assets\icons\guia.svg">Documentos</a>
+      </li>
+      -->
+
+    </ul>
+  </div>
+</div>
+
+<script></script>

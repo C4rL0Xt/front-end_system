@@ -1,0 +1,78 @@
+.tab-bar {
+  display: flex;
+  justify-content: space-around;
+  background-color: transparent;
+  padding: 10px;
+  margin: 0 20px; /* Margen alrededor del tab bar */
+  width: calc(100% - 40px); /* Restar el margen de 20px a cada lado */
+  /*border: 2px solid #082d49; /* Negro */
+  /*box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);*/
+}
+
+.tab {
+  position: relative;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  flex-grow: 1;
+  color: black;
+  text-align: center;
+  transition: color 0.3s, transform 0.3s; /* Añade transición suave */
+}
+
+.tab:before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #1d4dab; /* Color del indicador */
+  transition: width 0.3s, left 0.3s;
+}
+
+.tab:hover:before,
+.tab.active:before {
+  width: calc(100% - 40px);
+  left: 20px;
+}
+
+.tab.active {
+  color: #1d4dab; /* Color del texto del tab activo */
+  font-weight: bold; /* Hace que el texto del tab activo sea más grueso */
+}
+
+.tab:hover {
+  transform: scale(1.1); /* Escala el tab al pasar el ratón */
+}
+
+.tab.active:hover {
+  transform: scale(1); /* Restaura el tamaño del tab activo */
+}
+
+@media (max-width: 768px) {
+  .tab-bar {
+    flex-direction: column;
+    align-items: stretch; /* Ajusta el ancho de los tabs en pantallas pequeñas */
+  }
+
+  .tab {
+    width: 100%;
+    margin-bottom: 10px; /* Añade espacio entre los tabs en pantallas pequeñas */
+    border-radius: 10px; /* Bordes redondeados en pantallas pequeñas */
+    background-color: #163492; /* Color de fondo de los tabs en pantallas pequeñas */
+  }
+
+  .tab:before {
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #1d4dab; /* Color del indicador en pantallas pequeñas */
+  }
+
+  .tab:hover:before,
+  .tab.active:before {
+    width: 100%;
+  }
+}

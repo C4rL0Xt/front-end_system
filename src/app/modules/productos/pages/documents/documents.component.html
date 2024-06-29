@@ -1,0 +1,247 @@
+<!--app-side-bar></!--app-side-bar-->
+<div class="main-content">
+  <!--app-header-user></!--app-header-user-->
+  <div class="tab-container">
+    <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
+    <div class="tab-content">
+      <div *ngIf="selectOption === '/documents/crearSolicitud'">
+        <ng-container *ngTemplateOutlet="nuevaSolicitudZone"></ng-container>
+      </div>
+      <div *ngIf="selectOption === '/documents/crearHoja'">
+        <ng-container *ngTemplateOutlet="nuevaHojaZone"></ng-container>
+      </div>
+      <div *ngIf="selectOption === '/documents/guia'">
+        <ng-container *ngTemplateOutlet="nuevaGuiaZone"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #nuevaSolicitudZone>
+  <div class="form-and-empty">
+    <div class="form-container">
+      <form [formGroup]="crearSolicitudForm" (ngSubmit)="onSubmit()">
+        <h6>Datos de la solicitud</h6>
+        <div class="input-container">
+          <input id="id_solicitud" formControlName="id_solicitud" />
+        </div>
+        <div class="input-container" *ngFor="let form of forms">
+          <label *ngIf="form.type === 'date'" for="{{form.input}}" class="input-label">{{form.label}}</label>
+          <input id="{{form.input}}" formControlName="{{form.input}}" type="{{form.type}}"
+            placeholder="{{form.label}}" />
+          <div *ngIf="crearSolicitudForm.get(form.input)?.invalid && crearSolicitudForm.get(form.input)?.touched">
+            {{form.label}} es requerido(a)
+          </div>
+        </div>
+        <div class="button-container">
+          <button type="submit" [disabled]="crearSolicitudForm.invalid">Agregar</button>
+          <button type="button" (click)="onCancel()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="container">
+      <div class="table-container">
+        <h2 class="table-title">Solicitudes de compra</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID Solicitud</th>
+                <th>Producto</th>
+                <th>Cantidad requerida</th>
+                <th>Plazo entrega</th>
+                <th>Fecha</th>
+                <th>Identificacion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let solicitud of solicitudes" (click)="selectRow(solicitud)">
+                <td>{{ solicitud.id_solicitud }}</td>
+                <td>{{ solicitud.nombreProducto }}</td>
+                <td>{{ solicitud.cantidadRequerida }}</td>
+                <td>{{ solicitud.plazoEntrega }}</td>
+                <td>{{ solicitud.fecha }}</td>
+                <td>{{ solicitud.identificacion }}</td>
+              </tr>
+              <tr>
+                <td>Melanaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+              </tr>
+              <tr>
+                <td>Melani</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="form-update">
+        <form [formGroup]="updateSolicitudForm" (ngSubmit)="onUpdateSubmit()">
+          <div class="container-solo-labels-actualizacion">
+            <h6>Actualizacion de datos</h6>
+            <label>Id de Solicitud: {{ updateSolicitudForm.get('id_solicitud')?.value }}</label>
+            <label>Producto: {{ updateSolicitudForm.get('nombreProducto')?.value }}</label>
+            <div class="button-containerAct">
+              <button type="submit" [disabled]="updateSolicitudForm.invalid">Actualizar</button>
+              <button type="button" (click)="onUpdateCancel()">Cancelar</button>
+            </div>
+          </div>
+          <div class="container-solo-form">
+            <div class="input-container">
+              <label for="cantidadRequerida">Cantidad</label>
+              <input id="cantidadRequerida" formControlName="cantidadRequerida" />
+            </div>
+            <div class="input-container">
+              <label for="plazoEntrega">Fecha de Entrega</label>
+              <input id="plazoEntrega" formControlName="plazoEntrega" type="date" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #nuevaHojaZone>
+  <div class="hoja-ingreso-container">
+    <h2 class="section-title">Hoja de Ingreso</h2>
+
+    <div class="filter-container">
+      <select id="filterIdHoja" (change)="applyFilter()">
+        <option value="">ID Hoja</option>
+        <option *ngFor="let hoja of uniqueHojas" [value]="hoja">{{ hoja }}</option>
+      </select>
+      <select id="filterProducto" (change)="applyFilter()">
+        <option value="">ID Producto</option>
+        <option *ngFor="let producto of uniqueProductos" [value]="producto">{{ producto }}</option>
+      </select>
+      <select id="filterEmpleado" (change)="applyFilter()">
+        <option value="">ID Empleado</option>
+        <option *ngFor="let empleado of uniqueEmpleados" [value]="empleado">{{ empleado }}</option>
+      </select>
+      <input id="filterFecha" type="date" (input)="applyFilter()" />
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID Hoja</th>
+            <th>ID Producto</th>
+            <th>Nombre Producto</th>
+            <th>Cantidad</th>
+            <th>Fecha Ingreso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hoja of filteredHojas">
+            <td>{{ hoja.idhoja }}</td>
+            <td>{{ hoja.idProducto }}</td>
+            <td>{{ hoja.nombreProducto }}</td>
+            <td>{{ hoja.cantidad }}</td>
+            <td>{{ hoja.fechaIngreso }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #nuevaGuiaZone>
+  <div class="form-and-empty">
+    <div class="container-guia">
+      <div class="table-container">
+        <h2 class="table-title">Guias de remision</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID Guia</th>
+                <th>ID Empleado</th>
+                <th>ID Pedido</th>
+                <th>Fecha Entrega</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let guia of guias" (click)="selectRowGuia(guia)">
+                <td>{{ guia.idguia}}</td>
+                <td>{{ guia.idempleado }}</td>
+                <td>{{ guia.idpedido }}</td>
+                <td>{{ guia.fechaentrega }}</td>
+              </tr>
+              <tr>
+                <td>Melanaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+              </tr>
+              <tr>
+                <td>Melani</td>
+                <td>Adulta</td>
+                <td>Melani</td>
+                <td>Adulta</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="form-update">
+        <form [formGroup]="updateGuiaForm" (ngSubmit)="onUpdateSubmit()">
+          <div class="container-solo-labels-actualizacion">
+            <h6>Actualizacion de datos</h6>
+            <label>Id de guia: {{ updateGuiaForm.get('idguia')?.value }}</label>
+            <label>Empleado: {{ updateGuiaForm.get('idempleado')?.value }}</label>
+            <div class="button-containerAct">
+              <button type="submit" [disabled]="updateGuiaForm.invalid">Actualizar</button>
+              <button type="button" (click)="onUpdateCancel()">Cancelar</button>
+            </div>
+          </div>
+          <div class="container-solo-form">
+            <div class="input-container">
+              <label for="idpedido">Id del pedido</label>
+              <input id="idpedido" formControlName="idpedido" />
+            </div>
+            <div class="input-container">
+              <label for="fechaentrega">Fecha entrega</label>
+              <input id="fechaentrega" formControlName="fechaentrega" type="date" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="form-container-guia">
+      <form [formGroup]="crearGuiaForm" (ngSubmit)="onSubmit()">
+        <h6>Datos de la Guia de Remision</h6>
+        <div class="input-container">
+          <input id="idguia" formControlName="idguia" />
+        </div>
+        <div class="input-container" *ngFor="let form of formGuia">
+          <label *ngIf="form.type === 'date'" for="{{form.input}}" class="input-label">{{form.label}}</label>
+          <input id="{{form.input}}" formControlName="{{form.input}}" type="{{form.type}}"
+            placeholder="{{form.label}}" />
+          <div *ngIf="crearGuiaForm.get(form.input)?.invalid && crearGuiaForm.get(form.input)?.touched">
+            {{form.label}} es requerido(a)
+          </div>
+        </div>
+        <div class="button-container">
+          <button type="submit" [disabled]="crearGuiaForm.invalid">Agregar</button>
+          <button type="button" (click)="onCancel()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</ng-template>

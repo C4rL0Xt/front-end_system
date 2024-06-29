@@ -1,0 +1,119 @@
+<mat-card class="product-form-card">
+  <mat-card-title>Actualizar Producto</mat-card-title>
+  <form [formGroup]="productForm" class="product-form-grid">
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
+      <input matInput formControlName="code">
+      <mat-error *ngIf="productForm.get('code').hasError('required')">Código es requerido</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombrre</mat-label>
+      <input matInput formControlName="name">
+      <mat-error *ngIf="productForm.get('name').hasError('required')">Nombre es requerido</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Categoria</mat-label>
+      <input matInput formControlName="category">
+      <mat-error *ngIf="productForm.get('category').hasError('required')">Categoría es requerida</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Tipo</mat-label>
+      <input matInput formControlName="type">
+      <mat-error *ngIf="productForm.get('type').hasError('required')">Tipo es requerido</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Precio</mat-label>
+      <input matInput formControlName="price" type="number">
+      <mat-error *ngIf="productForm.get('price').hasError('required')">Precio es requerido</mat-error>
+      <mat-error *ngIf="productForm.get('price').hasError('min')">Precio debe ser mayor o igual a 0</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Concentracion</mat-label>
+      <input matInput formControlName="concentracion">
+      <mat-error *ngIf="productForm.get('concentracion').hasError('required')">Concentración es requerida</mat-error>
+      <mat-error *ngIf="productForm.get('concentracion').hasError('min')">Concentración debe ser mayor o igual a
+        0</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Presentacion</mat-label>
+      <input matInput formControlName="presentation">
+      <mat-error *ngIf="productForm.get('presentation').hasError('required')">Presentación es requerida</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Descripcion</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error *ngIf="productForm.get('description').hasError('required')">Descripción es requerida</mat-error>
+    </mat-form-field>
+  </form>
+  <div class="container-buttons">
+    <button mat-raised-button color="primary" (click)="enableForm()">Modify Product</button>
+  </div>
+
+
+  <div class="lot-section">
+    <mat-form-field appearance="fill">
+      <mat-label>Cantidad total</mat-label>
+      <input matInput [(ngModel)]="totalQuantity" type="number">
+    </mat-form-field>
+    <button mat-raised-button color="accent" (click)="generateLots()">Generar lotes</button>
+  </div>
+
+  <div *ngFor="let lot of lots; let i = index" class="lot-form">
+    <mat-card class="lot-card">
+      <mat-card-title>Lote {{i + 1}}</mat-card-title>
+      <form [formGroup]="lot">
+        <mat-form-field appearance="fill">
+          <mat-label>Code</mat-label>
+          <input matInput formControlName="code">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Estado Operativo</mat-label>
+          <mat-select formControlName="operationalStatus">
+            <mat-option *ngFor="let status of estadoOperativo" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Estado Disponibilidad</mat-label>
+          <mat-select formControlName="availabilityStatus">
+            <mat-option *ngFor="let status of estadoDisponibilidad" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Estado Seguridad</mat-label>
+          <mat-select formControlName="securityStatus">
+            <mat-option *ngFor="let status of estadoSeguridad" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Producto</mat-label>
+          <input matInput [value]="productForm.get('name').value" disabled>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Stock</mat-label>
+          <input matInput formControlName="quantity" type="number">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha de vencimiento</mat-label>
+          <input matInput formControlName="expirationDate" type="date">
+        </mat-form-field>
+      </form>
+    </mat-card>
+  </div>
+
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" (click)="addLots()">Guardar lotes</button>
+    <button mat-raised-button color="accent" (click)="cancel()">Cancelar</button>
+  </div>
+</mat-card>

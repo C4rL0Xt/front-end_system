@@ -1,0 +1,506 @@
+/* productopage.component.css */
+.layout {
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+}
+
+.input-container {
+  margin-bottom: 21px;
+  /* Establece el espacio entre los inputs */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px;
+  /* Ancho del sidebar */
+  margin-top: 0;
+  /* Header estará pegado a la parte superior */
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 40px;
+  /* Margen alrededor del tab-container */
+}
+
+.tab-content {
+  padding: 20px;
+  background: #ffffff;
+  width: calc(100% - 20px);
+  /* Restar el margen de 40px a cada lado */
+  margin: auto;
+  border-radius: 12px;
+  /* Bordes redondeados */
+  color: #333;
+  /* Texto oscuro */
+  font-family: 'Roboto', sans-serif;
+}
+
+/*Contenedor de todo*/
+.form-and-empty {
+  display: flex;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.form-container {
+  flex: 1;
+  max-width: 290px;
+  /*Es el ancho del form*/
+  padding: 20px;
+  /*Es el ancho del espacio donde va el form*/
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  min-height: 560px;
+}
+
+
+/* Container de la actualizacion*/
+.form-update {
+  width: 100%;
+  margin: 21px auto 0;
+  /* 21 px es separación con el container de arriba */
+  background: #f8f8f8;
+  border-radius: 12px;
+  min-height: 41%;
+  padding: 1px;
+}
+
+/*Container del form en el container de actualizacion*/
+.container-solo-form {
+  flex: 1;
+  max-width: 250px;
+  /*Es el ancho del form*/
+  margin-top: 4%;
+  margin-right: 10%;
+  /*deja espacio a la derecha de este contenedor dentro del otro contenedor
+  padding: 20px; /*Es el ancho del espacio donde va el form*/
+  border-radius: 12px;
+  background-color: #f8f8f8;
+}
+
+.container-solo-form input {
+  padding: 10px;
+  /*ancho de los inputs*/
+  font-size: 15px;
+  width: 80%;
+  /*Largo de los inputs*/
+  box-sizing: border-box;
+  /* Asegura que el padding no desborde el contenedor */
+  border: 1px solid #bbb;
+  /* Borde de los campos */
+  border-radius: 8px;
+  /* Bordes redondeados */
+  background-color: #ffffff;
+  /* Fondo de los campos */
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  /* Transición suave */
+}
+
+/*Container de datos en el container de actualizacion*/
+.container-solo-labels-actualizacion {
+  display: flex;
+  flex-direction: column;
+  /* Organiza los contenedores en una fila */
+  justify-content: space-between;
+  /* Espacio entre los contenedores */
+  min-width: 350px;
+  /*Es el ancho del form*/
+  margin-top: 4%;
+  margin-left: 4%;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  max-height: 200px;
+}
+
+.container-solo-labels-actualizacion label {
+  margin-top: 0%;
+}
+
+h6 {
+  font-weight: bold;
+  color: #080505;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 25px auto;
+  width: 70%;
+  margin-top: 1px;
+  /* Espacio que deja arriba */
+  margin-bottom: 0px;
+  background: #ffffff;
+  border-radius: 12px;
+  height: 600px;
+}
+
+.table-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: auto;
+  margin: 10px auto 0;
+  /* Eliminar el margen inferior y ajustar según sea necesario */
+  margin-top: 0px;
+  width: 100%;
+  background: #f8f8f8;
+  border-radius: 12px;
+  text-align: center;
+  max-height: 55%;
+}
+
+.empty-space {
+  flex: 1;
+  padding: 20px;
+  background-color: #0aff37;
+}
+
+.select-design {
+  /*border-bottom: 2px solid #00bcd4;  Borde inferior */
+  background-color: white;
+  /* Fondo transparente */
+  color: #333;
+  /* Texto oscuro */
+  font-size: 16px;
+  /*appearance: none;  Oculta la flecha predeterminada */
+  padding: 8px 12px;
+  transition: border-color 0.3s;
+}
+
+.table-title {
+  font-size: 1.1em;
+  color: #000000;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  /* Ajustar la distancia desde arriba */
+  margin-left: 20px;
+}
+
+
+.form-update form {
+  display: flex;
+  flex-direction: row;
+  /* Organiza los contenedores en una fila */
+  justify-content: space-between;
+  /* Espacio entre los contenedores */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+div {
+  margin-bottom: 0px;
+  /* espacio entre inputs cuando sale mensaje abajo*/
+}
+
+label {
+  font-size: 15px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input,
+textarea,
+select {
+  padding: 10px;
+  /*ancho de los inputs*/
+  font-size: 15px;
+  width: 92%;
+  /*Largo de los inputs*/
+  box-sizing: border-box;
+  /* Asegura que el padding no desborde el contenedor */
+  border: 1px solid #bbb;
+  /* Borde de los campos */
+  border-radius: 8px;
+  /* Bordes redondeados */
+  background-color: #ffffff;
+  /* Fondo de los campos */
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  /* Transición suave */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #26c6da;
+  /* Color del borde en foco */
+  box-shadow: 0 0 5px rgba(38, 198, 218, 0.5);
+  /* Sombra en foco */
+  outline: none;
+  /* Eliminar el contorno predeterminado */
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 9px;
+  width: 41%;
+  font-size: 15px;
+  background-color: #45b385cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-right: 18px;
+  /* Espacio entre los botones */
+}
+
+/*contenedor de botones en la actualizacion*/
+.button-containerAct {
+  display: flex;
+  flex-direction: row;
+  /* Organiza los contenedores en una fila */
+  justify-content: space-between;
+  /* Espacio entre los contenedores */
+  margin-top: 20px;
+  background-color: #f8f8f8;
+}
+
+.button-containerAct button {
+  padding: 9px;
+  width: 35%;
+  font-size: 15px;
+  background-color: #45b385cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-right: 60px;
+  /* Espacio entre los botones */
+}
+
+.button-container button:hover {
+  background-color: rgba(55, 140, 104, 0.8);
+  /* Color al pasar el mouse */
+  transform: translateY(-2px);
+  /* Efecto de levantamiento */
+}
+
+.button-container button[disabled] {
+  background-color: #45b385cc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    /* Eliminar el margen izquierdo en pantallas pequeñas */
+  }
+
+  .tab-container {
+    margin: 10px 20px;
+    /* Reducir el margen en pantallas pequeñas */
+  }
+
+  .form-and-empty {
+    flex-direction: column;
+  }
+
+  .form-container,
+  .empty-space {
+    width: 100%;
+    /* Ocupar todo el ancho en pantallas pequeñas */
+    border-right: none;
+  }
+}
+
+/*------------------------ PARA LA TABLA -------------------------*/
+
+
+
+h2 {
+  text-align: center;
+}
+
+table {
+  border-radius: 10px;
+  background-color: #b4b4b4;
+  width: 100%;
+  font-size: 15px;
+  text-align: left;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+  border-radius: 10px;
+  border-collapse: collapse;
+  border-spacing: 10px 5px;
+}
+
+
+thead {
+  font-size: 17px;
+  /* Gris muy claro */
+  border-bottom: 2px solid #cccccc;
+  /* Línea inferior gris */
+}
+
+th {
+  max-width: 20px;
+  padding: 12px;
+  color: #ffffff;
+
+
+}
+
+td {
+  max-width: 20px;
+  padding: 12px;
+
+  text-overflow: ellipsis;
+  /* Muestra puntos suspensivos si el contenido es demasiado largo */
+  white-space: nowrap;
+  /* Evita que el contenido se rompa en varias líneas */
+  overflow: hidden;
+  /* Oculta el contenido que se desborda */
+
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f6f6;
+}
+
+tbody tr:hover {
+  background-color: #e0e0e0;
+  /* Fondo al pasar el mouse */
+}
+
+
+
+
+/* Barra de deslizamiento - container de la tabla*/
+
+.table-scroll {
+  max-height: 250px;
+  /*Maxima expansion de la tabla para abajo*/
+  overflow-y: auto;
+  margin-left: 3%;
+  margin-right: 3%;
+  background-color: #f8f8f8;
+
+}
+
+/*INPUTS*/
+
+input::placeholder {
+  color: #cccaca;
+}
+
+.input-container div {
+  color: rgb(235, 82, 82);
+  font-size: 13.5px;
+  /*Tamaño de mensaje de requerido*/
+}
+
+.container-guia {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin-top: 1px;
+  /* Espacio que deja arriba */
+  margin-bottom: 0px;
+  background: #ffffff;
+  border-radius: 12px;
+  height: 600px;
+}
+
+.form-container-guia {
+  flex: 1;
+  margin-left: 1%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  min-height: 560px;
+}
+
+
+
+
+
+
+/* HOJAS DE INGRESO*/
+
+.hoja-ingreso-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+}
+
+.section-title {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.filter-container select,
+.filter-container input {
+  width: 22%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+
+.table-container {
+  overflow-x: auto;
+  max-height: 37 0px;
+}

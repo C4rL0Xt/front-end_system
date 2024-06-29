@@ -1,0 +1,180 @@
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+  perspective: 1000px;
+  /* Para los efectos 3D */
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 110%;
+  width: 110%;
+  background: url('https://www.bbraun.co.uk/content/dam/b-braun/de/website/unternehmen/nachhaltigkeit/report-excerpts/Chapter1_Cover_Sustainability_Report_2020.jpg.transform/650/image.jpg') no-repeat center center fixed;
+  background-size: cover;
+  opacity: 0.5;
+  z-index: -1;
+  animation: backgroundMove 20s infinite linear;
+  /* Animación de movimiento de fondo */
+}
+
+@keyframes backgroundMove {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  50% {
+    transform: scale(1.05) translate(-10%, -10%);
+  }
+
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+:host::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+  z-index: -1;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  /* Añadir efecto de desenfoque */
+}
+
+.logo {
+  height: 50px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: rotateY(360deg);
+  /* Animación 3D de rotación */
+}
+
+.login-button {
+  background: linear-gradient(45deg, #ff6b6b, #f8e71c);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  backdrop-filter: blur(5px);
+  /* Añadir efecto de desenfoque */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:hover {
+  transform: scale(1.1) rotateZ(10deg);
+  /* Escala y rotación 3D */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  text-align: center;
+  perspective: 1000px;
+  /* Para los efectos 3D */
+}
+
+.welcome-container {
+  max-width: 800px;
+  transform: rotateX(0deg);
+  animation: rotateX 10s infinite alternate ease-in-out;
+}
+
+@keyframes rotateX {
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  100% {
+    transform: rotateX(10deg);
+  }
+}
+
+.welcome-text {
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  /* Fuente moderna */
+  transform: translateZ(50px);
+  animation: textMove 3s ease-in-out infinite alternate;
+  letter-spacing: 2px;
+  /* Espaciado entre letras */
+}
+
+@keyframes textMove {
+  0% {
+    transform: translateZ(50px);
+  }
+
+  100% {
+    transform: translateZ(70px);
+  }
+}
+
+.welcome-subtext {
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  margin: 10px 0 0 0;
+  font-family: 'Roboto', sans-serif;
+  /* Fuente moderna */
+  transform: translateZ(30px);
+  animation: subtextMove 3s ease-in-out infinite alternate;
+  letter-spacing: 1px;
+  /* Espaciado entre letras */
+}
+
+@keyframes subtextMove {
+  0% {
+    transform: translateZ(30px);
+  }
+
+  100% {
+    transform: translateZ(50px);
+  }
+}

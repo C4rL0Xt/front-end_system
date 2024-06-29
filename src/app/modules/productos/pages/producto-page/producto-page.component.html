@@ -1,0 +1,34 @@
+<div class="layout">
+  <!--app-side-bar></!--app-side-bar-->
+  <div class="main-content">
+    <!--app-header-user></!--app-header-user-->
+    <div class="tab-container">
+      <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
+      <div class="tab-content">
+        <div *ngIf="selectOption === '/producto/nuevo'">
+          <ng-container *ngTemplateOutlet="newProductZone"></ng-container>
+        </div>
+        <div *ngIf="selectOption === '/producto/editar'">
+          <ng-container *ngTemplateOutlet="editProductZone"></ng-container>
+        </div>
+        <div *ngIf="selectOption ==='/producto/all'">
+          <ng-container *ngTemplateOutlet="allProductZone"></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #newProductZone>
+  <app-producto-form></app-producto-form>
+
+</ng-template>
+
+<ng-template #editProductZone>
+  <app-search (productSelected)="onProductSelected($event)"></app-search>
+  <app-editproducto [product]="selectedProduct"></app-editproducto>
+</ng-template>
+
+<ng-template #allProductZone>
+  <app-prod-table-view></app-prod-table-view>
+</ng-template>
