@@ -5,6 +5,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { ProductoPageComponent } from '../productos/pages/producto-page/producto-page.component';
 import { TesthomeComponent } from './pages/home-test/testhome/testhome.component';
 import { roleGuard } from '../../core/guards/role.guard';
+import { VentasModule } from '../ventas/ventas.module';
 
 
 
@@ -25,6 +26,12 @@ const routes: Routes = [
     loadChildren: () => import('../productos/productos.module').then(m => m.ProductosModule),
     canActivate: [roleGuard],
     data: { expectedRole: 'ROL_ALMACEN' }
+  },
+  {
+    path: 'ventas',
+    loadChildren: () => import('../ventas/ventas.module').then(m => m.VentasModule),
+    canActivate: [roleGuard],
+    data: { expectedRole: 'ROL_VENTA' }
   }
 ];
 

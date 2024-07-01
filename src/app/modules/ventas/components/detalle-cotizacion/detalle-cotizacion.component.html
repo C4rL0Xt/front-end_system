@@ -1,0 +1,15 @@
+<h2>Agregar Detalle a Cotización {{ data.cotizacionId }}</h2>
+<form [formGroup]="detalleForm" (ngSubmit)="agregarDetalle()">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Producto</mat-label>
+        <input matInput formControlName="idproducto">
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Cantidad</mat-label>
+        <input matInput formControlName="cantidad" type="number">
+    </mat-form-field>
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit">Agregar</button>
+        <button mat-button (click)="cerrarPanel()">Cerrar</button>
+    </div>
+</form>

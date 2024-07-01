@@ -50,8 +50,8 @@ export class SideBarComponent implements OnInit {
       ]
     } else if (this.userRole === 'ROL_VENTA') {
       this.menuOptions = [
-        { label: 'Clientes', route: '/home/ventas/cliente', image: 'assets/icons/audiencia.png' },
-        { label: 'Pedidos', route: '/home/ventas/productos', image: 'assets/icons/orden.png' },
+        { label: 'Clientes', route: '/home/ventas/clientes', image: 'assets/icons/audiencia.png' },
+        { label: 'Pedidos', route: '/home/ventas/pedidos', image: 'assets/icons/orden.png' },
         { label: 'Facturas', route: '/home/ventas/facturas', image: 'assets/icons/factura.png' },
         { label: 'Seguimiento', route: '/home/ventas/seguimiento', image: 'assets/icons/seguimiento.png' }
       ];
