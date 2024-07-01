@@ -352,8 +352,15 @@ thead {
   /* Línea inferior gris */
 }
 
+tr {
+  height: 50px;
+  width: 50%;
+  max-width: 100px;
+  /* Altura de las filas */
+}
+
 th {
-  max-width: 20px;
+  width: 50px;
   padding: 12px;
   color: #ffffff;
 
@@ -503,4 +510,10 @@ input::placeholder {
 .table-container {
   overflow-x: auto;
   max-height: 37 0px;
+}
+
+.filtroestado {
+  max-width: 30%;
+  margin-bottom: 10px;
+  margin-left: 10px;
 }

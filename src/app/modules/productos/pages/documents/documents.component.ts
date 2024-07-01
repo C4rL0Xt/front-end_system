@@ -1,23 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DocumentService } from '../../services/document-service/document.service';
+import { Solicitud } from '../../../../core/models/solicitudCompra.model';
+import { ProfileService } from '../../../../shared/services/profile/profile.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HojaIngreso } from '../../../../core/models/hojaingreso.model';
+import { GuiasRemision } from '../../../../core/models/guias.model';
 
-interface Guia {
-  id_guia: string;
-  id_empleado: string;
-  id_pedido: string;
-  fecha: string
-}
 
 
-// Define the interface for solicitudes
-interface Solicitud {
-  id_solicitud: string;
-  nombreProducto: string;
-  cantidadRequerida: string;
-  plazoEntrega: string;
-  fecha: string;
-  identificacion: string;
-}
 
 @Component({
   selector: 'app-documents',
@@ -27,7 +18,8 @@ interface Solicitud {
 
 
 export class DocumentsComponent implements OnInit {
-
+  last_code_solicitud: string;
+  last_code_guia: string;
 
   formGuia = [
     {
@@ -63,11 +55,6 @@ export class DocumentsComponent implements OnInit {
     type: 'date'
   },
   {
-    label: 'Fecha',
-    input: 'fecha',
-    type: 'date'
-  },
-  {
     label: 'Id Asistente',
     input: 'identificacion',
     type: 'string'
@@ -92,58 +79,57 @@ export class DocumentsComponent implements OnInit {
     },
   ];
 
-  /* Manejo de formulario */
+
   crearSolicitudForm: FormGroup = new FormGroup({});
   updateSolicitudForm: FormGroup = new FormGroup({});
   crearGuiaForm: FormGroup = new FormGroup({});
   updateGuiaForm: FormGroup = new FormGroup({});
 
-  //categories = ['Medicamento','Suplemento','Cosmetico'];
-  //forms = ['Tableta','Capsula','Liquido','Polvo'];
-  solicitudes: any = []; //pa mis productos ficticios
-  guias: any = [];
-  lastSolicitudId: string = 'SOL001';
-  lastGuiaId: string = 'GR001';
 
-  constructor(private fb: FormBuilder) {
+  solicitudes: any = []; //pa mis productos ficticios
+  guias: GuiasRemision[] = [];
+
+  filteredSolicitudes: Solicitud[] = [];
+  estadoFilter: string = '';
+  hojas: HojaIngreso[] = [];
+
+  constructor(private fb: FormBuilder, private documentService: DocumentService, private profileService: ProfileService, private snackBar: MatSnackBar) {
     this.crearSolicitudForm = this.fb.group({
       id_solicitud: [{ value: '', disabled: true }],
       nombreProducto: ['', Validators.required],
       cantidadRequerida: ['', Validators.required],
       plazoEntrega: ['', Validators.required],
-      fecha: ['', [Validators.required, Validators.min(0)]],
       identificacion: ['', Validators.required],
+      estado: [{ value: 'Pendiente', disabled: true }],
     });
 
+    this.filteredSolicitudes = this.solicitudes;
+
     this.updateSolicitudForm = this.fb.group({
-      id_solicitud: [{ value: '', disabled: true }],
-      nombreProducto: [{ value: '', disabled: true }],
+      id_solicitud: [''],
+      nombreProducto: [''],
       cantidadRequerida: ['', Validators.required],
       plazoEntrega: ['', Validators.required],
+      identificacion: ['', Validators.required],
+      estado: [{ value: 'Pendiente', disabled: true }],
     });
 
     this.crearGuiaForm = this.fb.group({
-      idguia: [{ value: '', disabled: true }],
+      idguia: ['', Validators.required],
       idempleado: ['', Validators.required],
       idpedido: ['', Validators.required],
       fechaentrega: ['', Validators.required]
     });
 
     this.updateGuiaForm = this.fb.group({
-      idguia: [{ value: '', disabled: true }],
+      idguia: [''],
       idempleado: [{ value: '', disabled: true }],
       idpedido: ['', Validators.required],
       fechaentrega: ['', Validators.required]
     });
   }
 
-  hojas = [
-    { idhoja: 1, idProducto: 201, nombreProducto: 'Producto A', cantidad: 10, fechaIngreso: '2024-06-01', empleado: 101 },
-    { idhoja: 2, idProducto: 202, nombreProducto: 'Producto B', cantidad: 5, fechaIngreso: '2024-06-02', empleado: 102 },
-    { idhoja: 3, idProducto: 203, nombreProducto: 'Producto C', cantidad: 7, fechaIngreso: '2024-06-03', empleado: 101 },
 
-    // Agregar más hojas aquí
-  ];
   filteredHojas = [...this.hojas];
   uniqueHojas = [];
   uniqueProductos = [];
@@ -151,72 +137,248 @@ export class DocumentsComponent implements OnInit {
   filteredProductNames = [];
 
   ngOnInit(): void {
-    this.generateSolicitudId();
     this.generateGuiaId();
     this.getUniqueValues();
-
-    // Inicialización de filteredHojas
     this.filteredHojas = [...this.hojas];
+    this.loadSolicitudes();
+    this.loadLastCodeSolicitud();
+    this.loadHojaIngreso();
+    this.loadGuiaRemision();
+    this.loadLsatCodeGuia();
   }
 
-  generateSolicitudId(): void {
-    const currentIdNumber = parseInt(this.lastSolicitudId.slice(3)) + 1;
-    const newId = 'SOL' + currentIdNumber.toString().padStart(3, '0');
-    this.crearSolicitudForm.get('id_solicitud')?.setValue(newId);
+  /* desde la api */
+
+  loadSolicitudes(): void {
+    this.documentService.getAllSolicitudCompra().subscribe((response: Solicitud[]) => {
+      console.log("Solicitudes resividas:  ", response);
+      this.solicitudes = response;
+      this.filteredSolicitudes = this.solicitudes;
+    });
   }
+
+  loadLastCodeSolicitud(): void {
+    this.documentService.getLastCodeSolicitud$().subscribe(code => {
+      this.crearSolicitudForm.patchValue({ id_solicitud: code });
+      this.generateNextCode(code);
+      console.log('Last code de solicitud:', code);
+    });
+
+    this.crearSolicitudForm.patchValue({ id_solicitud: this.last_code_solicitud });
+  }
+
+  loadLsatCodeGuia(): void {
+    this.documentService.getLastCodeGuia$().subscribe(code => {
+      this.crearGuiaForm.patchValue({ idguia: code });
+      this.last_code_guia = code;
+      this.generateNextCode(code);
+      console.log('Last code de guia:', code);
+    });
+
+    this.crearGuiaForm.patchValue({ idguia: this.last_code_guia });
+  }
+
+  generateNextCode(lastCode: string): void {
+    const prefix = lastCode.slice(0, 3);
+    const numberPart = lastCode.slice(3);
+    const nextNumber = parseInt(numberPart, 10) + 1;
+    const nextNumberPadded = nextNumber.toString().padStart(numberPart.length, '0');
+    const nextCode = `${prefix}${nextNumberPadded}`;
+    if (prefix === 'SO-') {
+      this.crearSolicitudForm.patchValue({ id_solicitud: nextCode });
+    } else {
+      this.crearGuiaForm.patchValue({ idguia: nextCode });
+    }
+
+  }
+
+  loadAllDataSolicitud(): void {
+    this.loadSolicitudes();
+    this.loadLastCodeSolicitud();
+  }
+
+  loadAllDataGuia(): void {
+    this.loadGuiaRemision();
+    this.loadLsatCodeGuia();
+  }
+
+  saveSolicitud(): void {
+    if (this.crearSolicitudForm.valid) {
+      const solicitudData = this.crearSolicitudForm.getRawValue();
+      const solicitudPresentationDto = {
+        id_solicitud: solicitudData.id_solicitud,
+        nombreProducto: solicitudData.nombreProducto,
+        cantidadRequerida: solicitudData.cantidadRequerida,
+        plazoEntrega: solicitudData.plazoEntrega,
+        identificacion: solicitudData.identificacion,
+        codigoempleado: this.profileService.getIdEmpleado(),
+        estado: 'Pendiente'
+      };
+
+      this.documentService.createSolicitudCompra(solicitudPresentationDto).subscribe((response) => {
+        console.log('Solicitud creada con exito', response);
+        this.snackBar.open('Solicitud creada con éxito', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['snack-bar-success'],
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+        });
+        this.crearSolicitudForm.reset();
+        this.loadAllDataSolicitud();
+      }, (error) => {
+        console.error('Error al guardar la solicitud de compra', error);
+        this.snackBar.open('Error al guardar la solicitud de compra', 'Cerrar', { duration: 3000 });
+      });
+
+    } else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+    }
+  }
+
+  updateSolicitud(): void {
+    if (this.updateSolicitudForm.valid) {
+      const solicitudData = this.updateSolicitudForm.value;
+      const solicitudPresentationDto = {
+        id_solicitud: solicitudData.id_solicitud,
+        nombreProducto: solicitudData.nombreProducto,
+        cantidadRequerida: solicitudData.cantidadRequerida,
+        plazoEntrega: solicitudData.plazoEntrega,
+        identificacion: solicitudData.identificacion,
+        codigoempleado: this.profileService.getIdEmpleado(),
+        estado: 'Pendiente'
+      };
+
+      this.documentService.updateSolicitudCompra(solicitudPresentationDto).subscribe((response) => {
+        console.log('Solicitud actualizada con éxito', response);
+        this.snackBar.open('Solicitud actualizada con éxito', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['snack-bar-success'],
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+        });
+        this.updateSolicitudForm.reset();
+        this.loadAllDataSolicitud();
+      },
+        (error) => {
+          console.error('Error al guardar la hoja de ingreso', error);
+          this.snackBar.open('Error al guardar la hoja de ingreso', 'Cerrar', { duration: 3000 });
+        });
+
+    } else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+
+    }
+    this.loadAllDataSolicitud();
+  }
+
+  loadHojaIngreso(): void {
+    this.documentService.getAllHojaIngreso().subscribe((response: HojaIngreso[]) => {
+      console.log('Respuesta completa de la API:', response);
+      this.hojas = response;
+      this.filteredHojas = this.hojas;
+    });
+  }
+
+  loadGuiaRemision(): void {
+    this.documentService.getAllGuiaRemision().subscribe((response: GuiasRemision[]) => {
+      console.log('Respuesta completa de la API:', response);
+      this.guias = response;
+    });
+  }
+
+  saveGuia(): void {
+    if (this.crearGuiaForm.valid) {
+      const guiaData = this.crearGuiaForm.getRawValue();
+      const guiaDto = {
+        idguiaremision: guiaData.idguia,
+        idempleado: this.profileService.getIdEmpleado(),
+        idpedido: guiaData.idpedido,
+        fecha_envio: guiaData.fechaentrega
+      };
+
+      console.log('Guia a guardar:', guiaDto);
+
+
+      this.documentService.createGuiaRemision(guiaDto).subscribe((response) => {
+        console.log('Guia creada con éxito', response);
+        this.snackBar.open('Guia creada con éxito', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['snack-bar-success'],
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+        });
+        this.crearGuiaForm.reset();
+        this.loadAllDataGuia();
+
+      }, (error) => {
+        console.error('Error al guardar la guia de remision', error);
+        this.snackBar.open('Error al guardar la guia de remision', 'Cerrar', { duration: 3000 });
+      });
+
+    } else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+    }
+  }
+
+  updateGuia(): void {
+    if (this.updateGuiaForm.valid) {
+      const guiaData = this.updateGuiaForm.value;
+      const guiadto = {
+        idguiaremision: guiaData.idguia,
+        idempleado: this.profileService.getIdEmpleado(),
+        idpedido: guiaData.idpedido,
+        fecha_envio: guiaData.fechaentrega
+      }
+
+      console.log('Guia a actualizar:', guiadto);
+
+      this.documentService.updateGuiaRemision(guiadto).subscribe((response) => {
+        console.log('Guia actualizada con éxito', response);
+        this.snackBar.open('Guia actualizada con éxito', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['snack-bar-success'],
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+        });
+        this.updateGuiaForm.reset();
+        this.loadAllDataGuia();
+      }, (error) => {
+        console.error('Error al guardar la guia de remision', error);
+        this.snackBar.open('Error al guardar la guia de remision', 'Cerrar', { duration: 3000 });
+      });
+    }
+  }
+
+  /* ------ fin api */
+
+
 
   generateGuiaId(): void {
-    const currentIdNumber = parseInt(this.lastGuiaId.slice(2)) + 1;
-    const newId = 'GR' + currentIdNumber.toString().padStart(2, '0');
-    this.crearGuiaForm.get('idguia')?.setValue(newId);
+
   }
+
+
 
 
   onSubmit(): void {
-    if (this.crearSolicitudForm.valid) {
-      const solicitudData = {
-        ...this.crearSolicitudForm.value,
-        id_solicitud: this.crearSolicitudForm.get('id_solicitud')?.value,
-      };
-      this.solicitudes.push(solicitudData);
-      console.log('Solicitud creada con éxito', solicitudData);
 
-      // Actualizar el último ID de solicitud
-      const currentIdNumber = parseInt(this.lastSolicitudId.slice(3)) + 1;
-      this.lastSolicitudId = 'SOL' + currentIdNumber.toString().padStart(3, '0');
 
-      // Generar nuevo ID de solicitud y vaciar el formulario
-      this.crearSolicitudForm.reset();
-      this.generateSolicitudId();
+  }
+
+  filtrarSolicitudes(): void {
+    if (this.estadoFilter) {
+      this.filteredSolicitudes = this.solicitudes.filter(solicitud => solicitud.estado === this.estadoFilter);
     } else {
-      console.log('Formulario inválido');
-    }
-
-    if (this.crearGuiaForm.valid) {
-      const guiaData = {
-        ...this.crearGuiaForm.value,
-        idguia: this.crearGuiaForm.get('idguia')?.value,
-      };
-      this.guias.push(guiaData);
-      console.log('Guia creada con éxito', guiaData);
-
-      // Actualizar el último ID de solicitud
-      const currentIdNumberGuia = parseInt(this.lastGuiaId.slice(2)) + 1;
-      this.lastGuiaId = 'GR' + currentIdNumberGuia.toString().padStart(2, '0');
-
-      // Generar nuevo ID de solicitud y vaciar el formulario
-      this.crearGuiaForm.reset();
-      this.generateGuiaId();
-    } else {
-      console.log('Formulario inválido');
+      this.filteredSolicitudes = this.solicitudes;
     }
   }
 
   onCancel(): void {
     this.crearSolicitudForm.reset();
-    this.generateSolicitudId();
+
     this.crearGuiaForm.reset();
-    this.generateGuiaId();
+    this.loadAllDataGuia();
+
   }
 
   selectRow(solicitud: any): void {
@@ -225,33 +387,28 @@ export class DocumentsComponent implements OnInit {
       nombreProducto: solicitud.nombreProducto,
       cantidadRequerida: solicitud.cantidadRequerida,
       plazoEntrega: solicitud.plazoEntrega,
+      codigoempleado: this.profileService.getIdEmpleado(),
+      identificacion: solicitud.identificacion,
+      estado: solicitud.estado,
     });
   }
 
   selectRowGuia(guia: any): void {
     this.updateGuiaForm.patchValue({
-      idguia: guia.idguia,
+      idguia: guia.idguiaremision,
       idempleado: guia.idempleado,
       idpedido: guia.idpedido,
-      fechaentrega: guia.fechaentrega,
+      fechaentrega: guia.fecha_envio,
     });
   }
 
 
   onUpdateSubmit(): void {
+    /*
     if (this.updateSolicitudForm.valid) {
-      const updatedValues = this.updateSolicitudForm.value;
 
-      const solicitud = this.solicitudes.find((s: Solicitud) => s.id_solicitud === this.updateSolicitudForm.get('id_solicitud')?.value);
-      if (solicitud) {
-        // Only update the fields that are present in the update form
-        Object.keys(updatedValues).forEach(key => {
-          if (updatedValues[key] !== '' && updatedValues[key] !== null) {
-            solicitud[key as keyof Solicitud] = updatedValues[key];
-          }
-        });
-        console.log('Solicitud actualizada con éxito', solicitud);
-      }
+      console.log('Solicitud actualizada con éxito');
+
     } else {
       console.log('Formulario de actualización inválido');
     }
@@ -271,7 +428,7 @@ export class DocumentsComponent implements OnInit {
       }
     } else {
       console.log('Formulario de actualización inválido');
-    }
+    }*/
   }
 
   onUpdateCancel(): void {
@@ -291,21 +448,21 @@ export class DocumentsComponent implements OnInit {
 
   getUniqueValues() {
     this.uniqueHojas = [...new Set(this.hojas.map(hoja => hoja.idhoja))];
-    this.uniqueProductos = [...new Set(this.hojas.map(hoja => hoja.idProducto))];
-    this.uniqueEmpleados = [...new Set(this.hojas.map(hoja => hoja.empleado))];
+    this.uniqueProductos = [...new Set(this.hojas.map(hoja => hoja.idhoja))];
+    this.uniqueEmpleados = [...new Set(this.hojas.map(hoja => hoja.idempleado))];
   }
   applyFilter() {
     const idHoja = (document.getElementById('filterIdHoja') as HTMLSelectElement).value.toLowerCase();
     const idProducto = (document.getElementById('filterProducto') as HTMLSelectElement).value.toLowerCase();
     const empleado = (document.getElementById('filterEmpleado') as HTMLSelectElement).value.toLowerCase();
-    const fecha = (document.getElementById('filterFecha') as HTMLInputElement).value;
+    const fecha = (document.getElementById('filterFecha') as HTMLInputElement).value.toString();
 
     this.filteredHojas = this.hojas.filter(hoja => {
       return (
         (!idHoja || hoja.idhoja.toString().toLowerCase().includes(idHoja)) &&
-        (!idProducto || hoja.idProducto.toString().toLowerCase().includes(idProducto)) &&
-        (!empleado || hoja.empleado.toString().toLowerCase().includes(empleado)) &&
-        (!fecha || hoja.fechaIngreso.includes(fecha))
+        (!idProducto || hoja.idhoja.toString().toLowerCase().includes(idProducto)) &&
+        (!empleado || hoja.idempleado.toString().toLowerCase().includes(empleado)) &&
+        (!fecha || hoja.fechaingreso.toISOString().includes(fecha))
       );
     });
   }

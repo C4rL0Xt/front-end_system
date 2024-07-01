@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="button-container">
-          <button type="submit" [disabled]="crearSolicitudForm.invalid">Agregar</button>
+          <button type="submit" [disabled]="crearSolicitudForm.invalid" (click)="saveSolicitud()">Agregar</button>
           <button type="button" (click)="onCancel()">Cancelar</button>
         </div>
       </form>
@@ -43,6 +43,14 @@
     <div class="container">
       <div class="table-container">
         <h2 class="table-title">Solicitudes de compra</h2>
+        <div class="filtroestado">
+          <select id="estado-filter" [(ngModel)]="estadoFilter" (change)="filtrarSolicitudes()">
+            <option value="">Todos</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Aceptado">Aceptado</option>
+            <option value="Rechazado">Rechazado</option>
+          </select>
+        </div>
         <div class="table-scroll">
           <table>
             <thead>
@@ -51,34 +59,18 @@
                 <th>Producto</th>
                 <th>Cantidad requerida</th>
                 <th>Plazo entrega</th>
-                <th>Fecha</th>
-                <th>Identificacion</th>
+                <th>ID Empleado Compra</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let solicitud of solicitudes" (click)="selectRow(solicitud)">
+              <tr *ngFor="let solicitud of filteredSolicitudes" (click)="selectRow(solicitud)">
                 <td>{{ solicitud.id_solicitud }}</td>
                 <td>{{ solicitud.nombreProducto }}</td>
                 <td>{{ solicitud.cantidadRequerida }}</td>
                 <td>{{ solicitud.plazoEntrega }}</td>
-                <td>{{ solicitud.fecha }}</td>
                 <td>{{ solicitud.identificacion }}</td>
-              </tr>
-              <tr>
-                <td>Melanaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
-              </tr>
-              <tr>
-                <td>Melani</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
+                <td>{{ solicitud.estado }}</td> <!-- Mostrar el estado -->
               </tr>
             </tbody>
           </table>
@@ -92,7 +84,7 @@
             <label>Id de Solicitud: {{ updateSolicitudForm.get('id_solicitud')?.value }}</label>
             <label>Producto: {{ updateSolicitudForm.get('nombreProducto')?.value }}</label>
             <div class="button-containerAct">
-              <button type="submit" [disabled]="updateSolicitudForm.invalid">Actualizar</button>
+              <button type="submit" (click)="updateSolicitud()">Actualizar</button>
               <button type="button" (click)="onUpdateCancel()">Cancelar</button>
             </div>
           </div>
@@ -147,10 +139,22 @@
         <tbody>
           <tr *ngFor="let hoja of filteredHojas">
             <td>{{ hoja.idhoja }}</td>
-            <td>{{ hoja.idProducto }}</td>
-            <td>{{ hoja.nombreProducto }}</td>
-            <td>{{ hoja.cantidad }}</td>
-            <td>{{ hoja.fechaIngreso }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let detalle of hoja.detalles">{{ detalle.idproducto }}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let detalle of hoja.detalles">{{ detalle.nombreProducto }}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let detalle of hoja.detalles">{{ detalle.cantidad }}</li>
+              </ul>
+            </td>
+            <td>{{ hoja.fechaingreso }}</td>
           </tr>
         </tbody>
       </table>
@@ -170,27 +174,15 @@
                 <th>ID Guia</th>
                 <th>ID Empleado</th>
                 <th>ID Pedido</th>
-                <th>Fecha Entrega</th>
+                <th>Fecha Envio</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let guia of guias" (click)="selectRowGuia(guia)">
-                <td>{{ guia.idguia}}</td>
+                <td>{{ guia.idguiaremision}}</td>
                 <td>{{ guia.idempleado }}</td>
                 <td>{{ guia.idpedido }}</td>
-                <td>{{ guia.fechaentrega }}</td>
-              </tr>
-              <tr>
-                <td>Melanaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
-              </tr>
-              <tr>
-                <td>Melani</td>
-                <td>Adulta</td>
-                <td>Melani</td>
-                <td>Adulta</td>
+                <td>{{ guia.fecha_envio | date: 'dd/MM/yyyy' }}</td>
               </tr>
             </tbody>
           </table>
@@ -203,7 +195,7 @@
             <label>Id de guia: {{ updateGuiaForm.get('idguia')?.value }}</label>
             <label>Empleado: {{ updateGuiaForm.get('idempleado')?.value }}</label>
             <div class="button-containerAct">
-              <button type="submit" [disabled]="updateGuiaForm.invalid">Actualizar</button>
+              <button type="submit" (click)="updateGuia()">Actualizar</button>
               <button type="button" (click)="onUpdateCancel()">Cancelar</button>
             </div>
           </div>
@@ -228,7 +220,7 @@
           <input id="idguia" formControlName="idguia" />
         </div>
         <div class="input-container" *ngFor="let form of formGuia">
-          <label *ngIf="form.type === 'date'" for="{{form.input}}" class="input-label">{{form.label}}</label>
+          <label *ngIf="form.type === 'date'" for="{{form.input}}" class="input-label">{{form.label}} </label>
           <input id="{{form.input}}" formControlName="{{form.input}}" type="{{form.type}}"
             placeholder="{{form.label}}" />
           <div *ngIf="crearGuiaForm.get(form.input)?.invalid && crearGuiaForm.get(form.input)?.touched">
@@ -236,7 +228,7 @@
           </div>
         </div>
         <div class="button-container">
-          <button type="submit" [disabled]="crearGuiaForm.invalid">Agregar</button>
+          <button type="submit" (click)="saveGuia()">Agregar</button>
           <button type="button" (click)="onCancel()">Cancelar</button>
         </div>
       </form>

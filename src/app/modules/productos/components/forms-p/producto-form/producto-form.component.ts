@@ -9,6 +9,9 @@ import { estadoOperativo } from '../../../../../core/models/estadoOperativo.mode
 import { estadoDisponibilidad } from '../../../../../core/models/estadoDisponibilidad.model';
 import { estadoSeguridad } from '../../../../../core/models/estadoSeguridad.model';
 import { Product } from '../../../../../core/models/product.model';
+import { DocumentService } from '../../../services/document-service/document.service';
+import { ProfileService } from '../../../../../shared/services/profile/profile.service';
+import { DetalleHoja } from '../../../../../core/models/detallhoja.model';
 
 @Component({
   selector: 'app-producto-form',
@@ -27,7 +30,7 @@ export class ProductoFormComponent implements OnInit {
   lastCode: string;
   lastCodeLote: string;
 
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private productService: ProductoService) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private productService: ProductoService, private documentService: DocumentService, private profileService: ProfileService) {
     this.productForm = this.fb.group({
       codigo: [{ value: '', disabled: true }],
       name: ['', Validators.required],
@@ -174,26 +177,49 @@ export class ProductoFormComponent implements OnInit {
         }))
       };
 
+      const hojaIngreso = {
+        idhoja: 'a',
+        idempleado: this.profileService.getIdEmpleado(),
+        fechaingreso: new Date(),
+        detalles: [
+          {
+            idproducto: productData.codigo,
+            cantidad: this.totalQuantity
+          }
+        ]
+      };
+
+      let productSaved = false;
       this.productService.createProduct(productoPresentationDto).subscribe((response) => {
-        console.log('Product Saved exitosamente:', response);
-        this.snackBar.open('Productos y lotes guardados exitosamente!', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['snack-bar-success'],
-          verticalPosition: 'top', // You can also set 'bottom'
-          horizontalPosition: 'center', // You can also set 'start', 'end', or 'left', 'right'
-        });
-        this.productForm.reset();
-        this.lots = [];
-        this.totalQuantity = undefined;
+        console.log('Product Saved successfully:', response);
+        productSaved = true;
+
+        // Solo si el producto se guardó correctamente, intentamos guardar la hoja de ingreso
+        if (productSaved) {
+          this.documentService.createHojaIngreso(hojaIngreso).subscribe((response) => {
+            console.log('Hoja de ingreso guardada exitosamente:', response);
+            this.snackBar.open('Productos y lotes guardados exitosamente!', 'Cerrar', {
+              duration: 3000,
+              panelClass: ['snack-bar-success'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+            });
+            this.productForm.reset();
+            this.lots = [];
+            this.totalQuantity = undefined;
+          }, (error) => {
+            console.error('Error al guardar la hoja de ingreso', error);
+            this.snackBar.open('Error al guardar la hoja de ingreso', 'Cerrar', { duration: 3000 });
+          });
+        }
+
       }, (error) => {
         console.error('Error al guardar el producto y los lotes', error);
         this.snackBar.open('Error al guardar el producto y los lotes', 'Cerrar', { duration: 3000 });
-      }
-      );
+      });
 
     } else {
       this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
-
     }
   }
 

@@ -1,0 +1,48 @@
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px;
+  /* Ancho del sidebar */
+  margin-top: 0;
+  /* Header estará pegado a la parte superior */
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 40px;
+  /* Margen alrededor del tab-container */
+}
+
+.tab-content {
+  padding: 20px;
+  background: linear-gradient(145deg, #f0f4f8, #dfe3e8);
+  /* Fondo suave */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 20px);
+  /* Restar el margen de 40px a cada lado */
+  margin: auto;
+  border-radius: 12px;
+  /* Bordes redondeados */
+  color: #333;
+  /* Texto oscuro */
+  font-family: 'Roboto', sans-serif;
+}
+
+.invoice-form {
+  max-width: 600px;
+  margin: auto;
+}
+
+mat-grid-tile {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  margin-right: 8px;
+}
