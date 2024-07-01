@@ -1,1 +1,171 @@
-<p>page-cliente works!</p>
+<div class="main-content">
+    <div class="tab-container">
+        <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
+        <div class="tab-content">
+            <div *ngIf="selectOption === '/clientes/agregarCliente'">
+                <ng-container *ngTemplateOutlet="agregarClienteZone"></ng-container>
+            </div>
+            <div *ngIf="selectOption === '/clientes/actualizarCliente'">
+                <ng-container *ngTemplateOutlet="editarClienteZone"></ng-container>
+            </div>
+            <div *ngIf="selectOption === '/clientes/tablaClientes'">
+                <ng-container *ngTemplateOutlet="tablaClienteZone"></ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #agregarClienteZone>
+    <mat-card class="product-form-card">
+        <mat-card-title>Registro del Cliente</mat-card-title>
+        <form [formGroup]="agregarClienteForm" (ngSubmit)="onSubmit()" class="formulario">
+            <div class="product-form-grid">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Codigo</mat-label>
+                    <input matInput formControlName="idcliente">
+                </mat-form-field>
+
+                <div *ngFor="let form of forms">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>{{form.label}}</mat-label>
+                        <input id="{{form.input}}" matInput formControlName="{{form.input}}" type="{{form.type}}">
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Departamento</mat-label>
+                    <mat-select formControlName="iddepartamento">
+                        <mat-option *ngFor="let depto of departamentos" [value]="depto.id">
+                            {{depto.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="button-container">
+                <button type="submit" [disabled]="agregarClienteForm.invalid">Agregar</button>
+                <button type="button" (click)="onCancel()">Cancelar</button>
+            </div>
+        </form>
+    </mat-card>
+</ng-template>
+
+<ng-template #editarClienteZone>
+    <mat-card class="product-form-card-editar">
+        <mat-card-title>Buscar Cliente</mat-card-title>
+        <div class="formulario-editar">
+            <form [formGroup]="buscarClienteForm" (ngSubmit)="onBuscarCliente()">
+                <mat-form-field appearance="fill" class="inpu">
+                    <mat-label>Codigo</mat-label>
+                    <input matInput formControlName="idcliente">
+                </mat-form-field>
+                <div class="button-container-editar">
+                    <button type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div >
+            <mat-card-title>Editar Cliente</mat-card-title>
+            <form [formGroup]="editarClienteForm" (ngSubmit)="onUpdate()" class="formulario" class = "editar">
+                <div class="product-form-grid">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Id</mat-label>
+                        <input matInput formControlName="idcliente">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Empresa</mat-label>
+                        <input matInput formControlName="empresa">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Representante</mat-label>
+                        <input matInput formControlName="representante">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>DNI</mat-label>
+                        <input matInput formControlName="dni">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput formControlName="telefono">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Dirección</mat-label>
+                        <input matInput formControlName="direccion">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Departamento</mat-label>
+                        <input matInput formControlName="iddepartamento">
+                    </mat-form-field>
+                </div>
+                <div class="button-container-editar">
+                    <button type="submit" [disabled]="editarClienteForm.invalid">Actualizar</button>
+                    <button type="button" (click)="onCancel()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</ng-template>
+
+
+<ng-template #tablaClienteZone>
+    <mat-card class="tabla-clientes-card">
+      <mat-card-title>Lista de Clientes</mat-card-title>
+      <mat-table #table [dataSource]="clients" class="mat-elevation-z8" >
+        <!-- Código del cliente Column -->
+        <ng-container matColumnDef="idcliente">
+          <mat-header-cell *matHeaderCellDef>Código del Cliente</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.idcliente }}</mat-cell>
+        </ng-container>
+  
+        <!-- Empresa Column -->
+        <ng-container matColumnDef="empresa">
+          <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.empresa }}</mat-cell>
+        </ng-container>
+  
+        <!-- Representante Column -->
+        <ng-container matColumnDef="representante">
+          <mat-header-cell *matHeaderCellDef>Representante</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.representante }}</mat-cell>
+        </ng-container>
+  
+        <!-- DNI Column -->
+        <ng-container matColumnDef="dni">
+          <mat-header-cell *matHeaderCellDef>DNI</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.dni }}</mat-cell>
+        </ng-container>
+  
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.email }}</mat-cell>
+        </ng-container>
+  
+        <!-- Teléfono Column -->
+        <ng-container matColumnDef="telefono">
+          <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.telefono }}</mat-cell>
+        </ng-container>
+  
+        <!-- Dirección Column -->
+        <ng-container matColumnDef="direccion">
+          <mat-header-cell *matHeaderCellDef>Dirección</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.direccion }}</mat-cell>
+        </ng-container>
+  
+        <!-- Departamento Column -->
+        <ng-container matColumnDef="iddepartamento">
+          <mat-header-cell *matHeaderCellDef>Departamento</mat-header-cell>
+          <mat-cell *matCellDef="let client">{{ client.iddepartamento }}</mat-cell>
+        </ng-container>
+
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </mat-card>
+  </ng-template>

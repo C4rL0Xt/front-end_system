@@ -1,0 +1,36 @@
+<mat-card class="product-form-card">
+    <mat-card-title>Cotizaciones de Venta</mat-card-title>
+    <form [formGroup]="crearCotizacionVentaForm" (ngSubmit)="onSubmit()" class="formulario">
+        <div class="product-form-grid">
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Codigo de cotizacion</mat-label>
+                <input matInput formControlName="idcotizacion">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Nombre del cliente</mat-label>
+                <input id="nombrecliente" matInput formControlName="nombrecliente" type="string">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Fecha de emision</mat-label>
+                <input id="fechaemision" matInput formControlName="fechaemision" type="date">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Email</mat-label>
+                <input id="email" matInput formControlName="email" type="string">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="iddepartamento">
+                    <mat-option *ngFor="let depto of departamentos" [value]="depto.id">
+                        {{depto.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="button-detalle">
+                <button type="submit" [disabled]="crearCotizacionVentaForm.invalid" (click)="openDetallePanel()">Agregar detalle</button>
+            </div>
+        </div>
+    </form>
+</mat-card>
+
+

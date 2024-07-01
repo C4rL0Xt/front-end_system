@@ -40,7 +40,7 @@ export class SearchComponent implements OnInit {
 
 
   onProductSelected(product: Product) {
-    this.selectedProducto = product;
+    this.selectedProducto = product; 
     this.productControl.setValue(product.name);
     console.log('Producto seleccionado: ', product);
     //this.productService.selectProduct(product);

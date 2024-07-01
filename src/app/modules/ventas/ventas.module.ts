@@ -6,22 +6,31 @@ import { PageClienteComponent } from './pages/page-cliente/page-cliente.componen
 import { PagePedidoComponent } from './pages/page-pedido/page-pedido.component';
 import { FacturaPageComponent } from './pages/factura-page/factura-page.component';
 import { SeguimientoPageComponent } from './pages/seguimiento-page/seguimiento-page.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatNativeDateModule } from '@angular/material/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
-import { FormNewFacComponent } from './components/form-new-fac/form-new-fac.component';
-import { FormEditFacComponent } from './components/form-edit-fac/form-edit-fac.component';
-import { TableFacComponent } from './components/table-fac/table-fac.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormCotizacionComponent } from './components/form-cotizacion/form-cotizacion.component';
+import { DetalleCotizacionComponent } from './components/detalle-cotizacion/detalle-cotizacion.component';
+import { ViewPedidoComponent } from './components/view-pedido/view-pedido.component';
+import { FormPedidoComponent } from './components/form-pedido/form-pedido.component';
+import { TablaCotizacionComponent } from './components/tabla-cotizacion/tabla-cotizacion.component';
 
 @NgModule({
   declarations: [
@@ -29,27 +38,36 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     PagePedidoComponent,
     FacturaPageComponent,
     SeguimientoPageComponent,
-    FormNewFacComponent,
-    FormEditFacComponent,
-    TableFacComponent
+    FormCotizacionComponent,
+    DetalleCotizacionComponent,
+    ViewPedidoComponent,
+    FormPedidoComponent,
+    TablaCotizacionComponent
   ],
   imports: [
     CommonModule,
     VentasRoutingModule,
-    ReactiveFormsModule,
     FormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatNativeDateModule,
-    MatCardModule,
+    ReactiveFormsModule,
     SharedModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatButtonModule,
     MatTableModule,
+    MatSelectModule,
+    MatOptionModule,
     MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatDialogModule,
     MatPaginatorModule
   ]
 })
