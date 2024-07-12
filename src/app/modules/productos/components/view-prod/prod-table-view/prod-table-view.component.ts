@@ -43,14 +43,16 @@ export class ProdTableViewComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.productService.getAllProducts().subscribe((response: Product[]) => {
-      console.log("Productos resividos:  ", response);
-      this.products = response;
-      this.dataSource = new MatTableDataSource(this.products);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.productService.getAllProducts().subscribe(
+      (response: Product[]) => {
+        console.log("Productos resividos:  ", response);
+        this.products = response;
 
-    })
+        this.dataSource = new MatTableDataSource(this.products);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+      })
   }
 
   showLots(product: Product) {

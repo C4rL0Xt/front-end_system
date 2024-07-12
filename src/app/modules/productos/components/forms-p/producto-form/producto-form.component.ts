@@ -158,6 +158,7 @@ export class ProductoFormComponent implements OnInit {
     if (this.productForm.valid && this.lots.every(lot => lot.valid)) {
       const productData = this.productForm.getRawValue();
       const lotsData = this.lots.map(lot => lot.getRawValue());
+
       const productoPresentationDto = {
         code: productData.codigo,
         category: productData.category,
@@ -192,6 +193,7 @@ export class ProductoFormComponent implements OnInit {
       let productSaved = false;
       this.productService.createProduct(productoPresentationDto).subscribe((response) => {
         console.log('Product Saved successfully:', response);
+
         productSaved = true;
 
         // Solo si el producto se guardó correctamente, intentamos guardar la hoja de ingreso

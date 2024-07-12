@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { cotizacionVenta } from '../../../../core/models/cotizacionVenta';
+import { Router } from '@angular/router';
 
 
 
@@ -23,23 +24,23 @@ export class PagePedidoComponent implements OnInit {
   tabs = [
     {
       label: 'Generar Cotizacion',
-      route: '/ventas/generarCotizacion',
+      route: '/ventas/pedidos/generarCotizacion',
     },
     {
       label: 'Cotizaciones',
-      route: '/ventas/cotizaciones',
+      route: '/ventas/pedidos/cotizaciones',
     },
     {
       label: 'Pedidos',
-      route: '/ventas/pedidos',
+      route: '/ventas/pedidos/pedidos',
     },
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
   }
 
   ngOnInit(): void {
-  }  
+  }
 
   onTabSelected(route: string): void {
     this.selectOption = route;

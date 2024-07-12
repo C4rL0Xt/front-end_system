@@ -31,6 +31,8 @@ import { DetalleCotizacionComponent } from './components/detalle-cotizacion/deta
 import { ViewPedidoComponent } from './components/view-pedido/view-pedido.component';
 import { FormPedidoComponent } from './components/form-pedido/form-pedido.component';
 import { TablaCotizacionComponent } from './components/tabla-cotizacion/tabla-cotizacion.component';
+import { FormNewFacComponent } from './components/form-new-fac/form-new-fac.component';
+import { TableFacComponent } from './components/table-fac/table-fac.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { TablaCotizacionComponent } from './components/tabla-cotizacion/tabla-co
     DetalleCotizacionComponent,
     ViewPedidoComponent,
     FormPedidoComponent,
-    TablaCotizacionComponent
+    TablaCotizacionComponent,
+    FormNewFacComponent,
+    TableFacComponent
   ],
   imports: [
     CommonModule,

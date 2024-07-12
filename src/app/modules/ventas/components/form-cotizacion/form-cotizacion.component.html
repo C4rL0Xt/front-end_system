@@ -1,36 +1,97 @@
 <mat-card class="product-form-card">
-    <mat-card-title>Cotizaciones de Venta</mat-card-title>
-    <form [formGroup]="crearCotizacionVentaForm" (ngSubmit)="onSubmit()" class="formulario">
-        <div class="product-form-grid">
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-label>Codigo de cotizacion</mat-label>
-                <input matInput formControlName="idcotizacion">
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-label>Nombre del cliente</mat-label>
-                <input id="nombrecliente" matInput formControlName="nombrecliente" type="string">
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-label>Fecha de emision</mat-label>
-                <input id="fechaemision" matInput formControlName="fechaemision" type="date">
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-label>Email</mat-label>
-                <input id="email" matInput formControlName="email" type="string">
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="full-width">
-                <mat-label>Departamento</mat-label>
-                <mat-select formControlName="iddepartamento">
-                    <mat-option *ngFor="let depto of departamentos" [value]="depto.id">
-                        {{depto.nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div class="button-detalle">
-                <button type="submit" [disabled]="crearCotizacionVentaForm.invalid" (click)="openDetallePanel()">Agregar detalle</button>
-            </div>
+  <mat-card-title>Registrar Cotización</mat-card-title>
+  <form [formGroup]="cotizacionForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+    <mat-form-field appearance="fill">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="idcotizacion">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Código Empleado</mat-label>
+      <input matInput formControlName="idempleado">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="estado">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre cliente</mat-label>
+      <input matInput formControlName="nombrecliente">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Monto</mat-label>
+      <input matInput formControlName="montoproducto" type="number">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Monto Impuesto</mat-label>
+      <input matInput formControlName="montoimpuesto" type="number">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Monto Total</mat-label>
+      <input matInput formControlName="montototal" type="number">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha emisión</mat-label>
+      <input matInput formControlName="fechaemision" type="date">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Departamento</mat-label>
+      <mat-select formControlName="departamento">
+        <mat-option *ngFor="let departamento of departamentos" [value]="departamento.id">
+          {{departamento.nombre}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="product-list">
+      <h1><strong>Productos</strong></h1>
+      <div formArrayName="detalles">
+        <div *ngFor="let detalle of detalles.controls; let i=index" [formGroupName]="i" class="producto-form">
+
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Producto</mat-label>
+            <input type="text" matInput formControlName="producto" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event.option.value)">
+              <mat-option *ngFor="let option of filteredOptions[i]| async" [value]="option.name">
+                {{option.name}}-{{option.concentracion}}-{{option.presentation}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Cantidad</mat-label>
+            <input matInput formControlName="cantidad" type="number">
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" (click)="removeDetalle(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-    </form>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button mat-fab extended color="primary" type="button" (click)="addDetalle()" class="color-boton">Nuevo
+        <mat-icon>add</mat-icon></button>
+    </div>
+  </form>
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" type="button" (click)="calculateTotal()">Agregar Producto (s)</button>
+  </div>
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" type="submit" class="color-boton-2"
+      (click)="saveEverything()">Guardar</button>
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancelar</button>
+  </div>
 </mat-card>
-
-

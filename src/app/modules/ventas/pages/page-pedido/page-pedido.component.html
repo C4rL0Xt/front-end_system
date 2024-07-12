@@ -4,13 +4,13 @@
   <div class="tab-container">
     <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
     <div class="tab-content">
-      <div *ngIf="selectOption === '/ventas/generarCotizacion'">
+      <div *ngIf="selectOption === '/ventas/pedidos/generarCotizacion'">
         <ng-container *ngTemplateOutlet="nuevaCotizacionZone"></ng-container>
       </div>
-      <div *ngIf="selectOption === '/ventas/cotizaciones'">
+      <div *ngIf="selectOption === '/ventas/pedidos/cotizaciones'">
         <ng-container *ngTemplateOutlet="tablaCotizacionZone"></ng-container>
       </div>
-      <div *ngIf="selectOption === '/ventas/pedidos'">
+      <div *ngIf="selectOption === '/ventas/pedidos/pedidos'">
         <ng-container *ngTemplateOutlet="pedidosZone"></ng-container>
       </div>
     </div>
@@ -19,11 +19,10 @@
 
 <ng-template #nuevaCotizacionZone>
   <app-form-cotizacion></app-form-cotizacion>
-  <app-tabla-cotizacion></app-tabla-cotizacion>
 </ng-template>
 
 <ng-template #tablaCotizacionZone>
-
+  <app-tabla-cotizacion></app-tabla-cotizacion>
 </ng-template>
 
 <ng-template #pedidosZone>

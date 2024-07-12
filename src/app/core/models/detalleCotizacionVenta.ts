@@ -1,5 +1,6 @@
 export interface DetalleCotizacionVenta {
-    idcotizacion: string;
-    idproducto: string;
-    cantidad: number;
-  }
+  idcotizacion: string;
+  producto: string;
+  concentracion?: string;
+  cantidad: number;
+}
