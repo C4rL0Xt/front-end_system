@@ -19,4 +19,5 @@ export const environment = {
   api_empleado: 'http://localhost:9000/api/rrhh',
   api_documentos: 'http://localhost:9000/api/doc-compra',
   api_coti: 'http://localhost:9000/api/cotizacion',
+  api_cliente: 'http://localhost:9000/api/cliente'
 };

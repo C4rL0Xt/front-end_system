@@ -1,10 +1,10 @@
 export interface Cliente {
-    idcliente: string;
+    id_cliente: string;
     empresa: string;
     representante: string;
     dni: string;
     email: string;
     telefono: string;
     direccion: string;
-    iddepartamento: number;
+    departamento: string;
   }
