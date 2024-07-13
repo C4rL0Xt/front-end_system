@@ -17,4 +17,5 @@ export const environment = {
   gateway_url: 'http://localhost:9000',
   api_almacen: 'http://localhost:9000/api/almacen',
   api_empleado: 'http://localhost:9000/api/rrhh',
+  api_cliente: 'http://localhost:9000/api/cliente'
 };

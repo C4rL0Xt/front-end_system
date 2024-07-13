@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Cliente } from '../../../../core/models/cliente.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-interface Departamento {
-  id: number;
-  nombre: string;
-}
+import { ClienteServiceService } from '../../services/cliente-service.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { Department } from '../../../../core/models/departamento.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { startWith, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-page-cliente',
@@ -17,6 +20,9 @@ export class PageClienteComponent implements OnInit {
   selectOption: string = '';
   selectedTab: number = 1;
   clienteEncontrado: any = null;
+  selectedCliente: Cliente | null = null;
+  clientControl = new FormControl();
+  filteredClients: Observable<Cliente[]>;
 
   tabs = [
     {
@@ -77,21 +83,18 @@ export class PageClienteComponent implements OnInit {
     'iddepartamento',
   ];
 
-  departamentos: Departamento[] = [
-    { id: 1, nombre: 'Lima' },
-    { id: 2, nombre: 'Cusco' },
-    { id: 3, nombre: 'Arequipa' },
-    // Añade más departamentos según sea necesario
-  ];
-
   agregarClienteForm: FormGroup = new FormGroup({});
   buscarClienteForm: FormGroup = new FormGroup({});
   editarClienteForm: FormGroup = new FormGroup({});
-  clients: any = [];
+  clients: Cliente[] = [];
+  departments: String[] = [];
   lastClientId: string = 'CL0001';
-  dataSource = new MatTableDataSource<any>();
+  dataSource: MatTableDataSource<Cliente> = new MatTableDataSource();
 
-  constructor(private fb: FormBuilder) {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private fb: FormBuilder,private snackBar: MatSnackBar, private clienteService: ClienteServiceService) {
     this.agregarClienteForm = this.fb.group({
       idcliente: [{ value: '', disabled: true }],
       empresa: ['', Validators.required],
@@ -100,7 +103,7 @@ export class PageClienteComponent implements OnInit {
       email: ['', Validators.required],
       telefono: ['', Validators.required],
       direccion: ['', Validators.required],
-      iddepartamento: ['', Validators.required]
+      nombre_departamento: ['', Validators.required]
     });
 
     this.buscarClienteForm = this.fb.group({
@@ -108,39 +111,19 @@ export class PageClienteComponent implements OnInit {
     });
 
     this.editarClienteForm = this.fb.group({
-      idcliente: [{ value: '', disabled: true }],
+      id_cliente: [{ value: '', disabled: true }],
       empresa: [{ value: '', disabled: true }],
       representante: ['', Validators.required],
       dni: ['', Validators.required],
       email: ['', Validators.required],
       telefono: ['', Validators.required],
       direccion: ['', Validators.required],
-      iddepartamento: ['', Validators.required]
+      nombre_departamento: ['', Validators.required]
     });
   }
 
-  generatedClientId(): void {
-    const currentIdNumber = parseInt(this.lastClientId.slice(2)) + 1;
-    const newId = 'CL' + currentIdNumber.toString().padStart(4, '0');
-    this.agregarClienteForm.get('idcliente')?.setValue(newId);
-  }
-
   onSubmit(): void {
-    if (this.agregarClienteForm.valid) {
-      const clienteData = {
-        ...this.agregarClienteForm.value,
-        idcliente: this.agregarClienteForm.get('idcliente')?.value,
-      };
-      this.clients.push(clienteData);
-      console.log('Cliente creada con éxito', clienteData);
-      const currentIdNumber = parseInt(this.lastClientId.slice(2)) + 1;
-      this.lastClientId = 'CL' + currentIdNumber.toString().padStart(4, '0');
-      this.agregarClienteForm.reset();
-      this.generatedClientId();
-      this.resetFormState(this.agregarClienteForm);
-    } else {
-      console.log('Formulario inválido');
-    }
+
   }
 
   onBuscarCliente(): void {
@@ -163,14 +146,119 @@ export class PageClienteComponent implements OnInit {
       this.clienteEncontrado = null;
       this.buscarClienteForm.reset();
       this.editarClienteForm.reset();
-      this.resetFormState(this.editarClienteForm);
     } else {
       console.log('Formulario invalido');
     }
   }
 
   ngOnInit(): void {
-    this.generatedClientId();
+    this.generateRandomCode();
+    this.loadDepartamentos();
+    this.loadClientes();
+
+    this.filteredClients = this.clientControl.valueChanges.pipe(
+      startWith(''),
+      switchMap(value => this._filter(value))
+    );
+
+  }
+
+  loadClientes(): void {
+    this.clienteService.getAllClients().subscribe((response: Cliente[]) => {
+      console.log("Clientes recibidos:  ", response);
+      this.clients = response;
+      this.dataSource = new MatTableDataSource(this.clients);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+
+  loadDepartamentos(): void {
+    this.clienteService.getAllDepartments().subscribe((response: String[]) => {
+      this.departments = response;
+      console.log("Hola dep", response);
+    }
+    )
+  }
+
+  generateRandomCode() {
+    const randomNumber = Math.floor(Math.random() * 100000);
+    const randomCode = `C${randomNumber.toString().padStart(5, '0')}`;
+    this.agregarClienteForm.patchValue({ idcliente: randomCode });
+  }
+
+  saveCliente(): void {
+    if (this.agregarClienteForm.valid) {
+      const clienteData = this.agregarClienteForm.getRawValue();
+      const clientePresentation = {
+        id_cliente: clienteData.idcliente,
+        empresa: clienteData.empresa,
+        representante: clienteData.representante,
+        dni: clienteData.dni,
+        email: clienteData.email,
+        telefono: clienteData.telefono,
+        direccion: clienteData.direccion,
+        departamento: clienteData.nombre_departamento
+      };
+
+      console.log(clientePresentation);
+      this.clienteService.createClient(clientePresentation).subscribe((response) => {
+        console.log('Cliente save exitosamente: ', response);
+        this.agregarClienteForm.reset();
+        this.generateRandomCode();
+
+      }, (error) => {
+        console.error('Error al guardar el cliente', error);
+      }
+    );
+
+    }else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+
+    }
+  }
+
+  actualizarCliente(): void {
+    if (this.editarClienteForm.valid) {
+      const clienteAData = this.editarClienteForm.getRawValue();
+      const clienteAPresentation = {
+        id_cliente: clienteAData.id_cliente,
+        empresa: clienteAData.empresa,
+        representante: clienteAData.representante,
+        dni: clienteAData.dni,
+        email: clienteAData.email,
+        telefono: clienteAData.telefono,
+        direccion: clienteAData.direccion,
+        departamento: clienteAData.nombre_departamento
+      };
+      console.log(clienteAPresentation);
+
+      this.clienteService.updateClient(clienteAPresentation).subscribe((response) => {
+        console.log('Cliente actualizado exitosamente: ', response);
+        this.editarClienteForm.reset();
+      }, (error) => {
+        console.error('Error al actualizar el cliente', error);
+      }
+    );
+    }else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+
+    }
+  }
+
+  private _filter(value: string): Observable<Cliente[]> {
+    const filterValue = value ? value.toString().toLowerCase() : '';
+    return this.clienteService.getAllClients().pipe(
+      map(clients => clients.filter(client => client.empresa.toLowerCase().includes(filterValue)))
+    );
+  }
+
+  onClientSelected(client: Cliente) {
+    this.selectedCliente = client; 
+    this.clientControl.setValue(client.empresa);
+    console.log('Cliente seleccionado: ', client);
+    this.editarClienteForm.patchValue(client);
+    //this.productService.selectProduct(product);
   }
 
   onTabSelected(route: string): void {
@@ -180,18 +268,8 @@ export class PageClienteComponent implements OnInit {
 
   onCancel(): void {
     this.agregarClienteForm.reset();
-    this.generatedClientId();
     this.editarClienteForm.reset();
-    this.resetFormState(this.editarClienteForm);
+    this.clientControl.reset();
+    this.generateRandomCode();
   }
-
-  resetFormState(form: FormGroup): void {
-    form.markAsPristine();
-    form.markAsUntouched();
-    Object.keys(form.controls).forEach(key => {
-      form.get(key)?.setErrors(null);
-    });
-  }
-
-
 }

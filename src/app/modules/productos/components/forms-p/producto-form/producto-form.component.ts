@@ -39,7 +39,6 @@ export class ProductoFormComponent implements OnInit {
       description: ['', Validators.required]
     });
 
-
   }
 
 
