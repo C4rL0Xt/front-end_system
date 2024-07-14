@@ -1,0 +1,21 @@
+<div class="main-content">
+  <div class="tab-container">
+    <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
+    <div class="tab-content">
+      <div *ngIf="selectOption === '/proveedor/new'">
+        <ng-container *ngTemplateOutlet="agregarProveedor"></ng-container>
+      </div>
+      <div *ngIf="selectOption === '/proveedor/edit'">
+        <ng-container *ngTemplateOutlet="editarProveedor"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #agregarProveedor>
+  <app-add-proveedor></app-add-proveedor>
+</ng-template>
+
+<ng-template #editarProveedor>
+  <app-edit-proveedor></app-edit-proveedor>
+</ng-template>

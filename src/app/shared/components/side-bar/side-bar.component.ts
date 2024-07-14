@@ -44,9 +44,9 @@ export class SideBarComponent implements OnInit {
       ];
     } else if (this.userRole === 'ROL_COMPRA') {
       this.menuOptions = [
-        { label: 'Inicio', route: '/home/compra/inicio', image: 'assets/icons/hogar.png' },
-        { label: 'Cotizaciones', route: '/home/compra/cotizacion', image: 'assets/icons/cotizacion.png' },
-        { label: 'Documentos', route: '/home/compra/cotizacion', image: 'assets/icons/documentos.png' }
+        { label: 'Proveedores', route: '/home/compras/proveedor', image: 'assets/icons/hogar.png' },
+        { label: 'Cotizaciones', route: '/home/compras/cotizacion', image: 'assets/icons/cotizacion.png' },
+        { label: 'Documentos', route: '/home/compras/documents', image: 'assets/icons/documentos.png' }
       ]
     } else if (this.userRole === 'ROL_VENTA') {
       this.menuOptions = [

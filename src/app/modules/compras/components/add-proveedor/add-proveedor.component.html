@@ -1,0 +1,46 @@
+<mat-card class="product-form-card">
+  <mat-card-title>Registrar Proveedor</mat-card-title>
+  <form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo Proveedor</mat-label>
+      <input matInput formControlName="idproveedor">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Empresa</mat-label>
+      <input matInput formControlName="empresa">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Direccion</mat-label>
+      <input matInput formControlName="direccion">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Telefono</mat-label>
+      <input matInput formControlName="telefono">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>RUC</mat-label>
+      <input matInput formControlName="ruc" type="text">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rating</mat-label>
+      <input matInput formControlName="rate" type="number">
+    </mat-form-field>
+
+  </form>
+
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" type="submit" class="color-boton-2"
+      (click)="saveEverything()">Guardar</button>
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancelar</button>
+  </div>
+</mat-card>

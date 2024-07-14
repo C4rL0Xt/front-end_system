@@ -16,6 +16,11 @@
       <input matInput formControlName="estado">
     </mat-form-field>
 
+    <mat-form-field appearance="fill">
+      <mat-label>DNI</mat-label>
+      <input matInput formControlName="dni">
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Nombre cliente</mat-label>
       <input matInput formControlName="nombrecliente">
@@ -73,6 +78,11 @@
           <mat-form-field appearance="fill">
             <mat-label>Cantidad</mat-label>
             <input matInput formControlName="cantidad" type="number">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Total</mat-label>
+            <input matInput formControlName="total" type="number">
           </mat-form-field>
 
           <button mat-icon-button color="warn" (click)="removeDetalle(i)">

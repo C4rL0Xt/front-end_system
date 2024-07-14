@@ -3,6 +3,7 @@ import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, map, of, catchError, tap, throwError } from 'rxjs';
 import { cotizacionVenta } from '../../../../core/models/cotizacionVenta';
+import { DetalleCotizacionVenta } from '../../../../core/models/detalleCotizacionVenta';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,14 @@ export class CotiVentaService {
       }
       )
     );
+  }
+
+  updateCotizacionVenta(cotizacion: cotizacionVenta): Observable<any> {
+    return this.http.put(`${this.URL}/coti-v/update`, cotizacion);
+  }
+
+  deleteDetalleCotizacionVenta(detalle: DetalleCotizacionVenta): Observable<any> {
+    return this.http.delete(`${this.URL}/coti-v/delete/detalle`, { body: detalle });
   }
 
 

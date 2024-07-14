@@ -1,0 +1,269 @@
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px;
+  /* Ancho del sidebar */
+  margin-top: 0;
+  /* Header estará pegado a la parte superior */
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 40px;
+  /* Margen alrededor del tab-container */
+}
+
+.tab-content {
+  padding: 20px;
+  background: #ffffff;
+  width: calc(100% - 20px);
+  margin: auto;
+  border-radius: 12px;
+}
+
+.product-form-card {
+  width: 100%;
+  height: 500px;
+  margin: 20px auto;
+  padding-top: 20px;
+  padding-left: 50px;
+  background-color: #fafafa;
+  box-shadow: 0 0px 0px rgba(16, 16, 16, 0.1);
+}
+
+.product-form-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 95%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-title {
+  font-size: 30px;
+  margin-top: 0px;
+  margin-left: 23px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-container {
+  margin-top: 100px;
+  width: 700px;
+}
+
+.button-container button {
+  padding: 10px;
+  width: 20%;
+  height: 50px;
+  font-size: 17px;
+  background-color: #45b385cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-right: 50px;
+  /* Espacio entre los botones */
+}
+
+.button-container button:hover {
+  background-color: rgba(55, 140, 104, 0.8);
+  /* Color al pasar el mouse */
+  transform: translateY(-2px);
+  /* Efecto de levantamiento */
+}
+
+.button-container button[disabled] {
+  background-color: #45b385cc;
+  cursor: not-allowed;
+}
+
+.formulario-editar {
+  padding-bottom: 10px;
+  margin-top: 0px;
+  border-radius: 12px;
+  padding-left: 25px;
+  background-color: #fafafa;
+}
+
+.button-container-editar {
+  width: 300px;
+  background-color: #fafafa;
+}
+
+.button-container-editar button {
+  width: 35%;
+  height: 40px;
+  font-size: 17px;
+  background-color: #45b385cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-right: 20px;
+}
+
+.button-container-editar button:hover {
+  background-color: rgba(55, 140, 104, 0.8);
+  /* Color al pasar el mouse */
+  transform: translateY(-2px);
+  /* Efecto de levantamiento */
+}
+
+.button-container-editar button[disabled] {
+  background-color: #45b385cc;
+  cursor: not-allowed;
+}
+
+.formulario-editar mat-form-field {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  width: 300px;
+  background-color: #fafafa;
+}
+
+.editar {
+  margin-top: 20px;
+  padding-top: 1px;
+  padding-bottom: 20px;
+  padding-left: 25px;
+  background-color: #fafafa;
+  border-radius: 12px;
+}
+
+.product-form-card-editar {
+  width: 100%;
+  height: 600px;
+  margin: 20px auto;
+  padding-left: 20px;
+  margin-top: 2px;
+  background-color: #ffffff;
+  box-shadow: 0 0px 0px rgba(16, 16, 16, 0.1);
+}
+
+.tabla-clientes-card {
+  margin-top: 10px;
+  width: 100%;
+  box-shadow: none !important;
+  /* Eliminar la sombra */
+  border: none !important;
+  /* Eliminar el borde */
+  margin-left: 30px;
+  padding-right: 60px;
+}
+
+.mat-table {
+  width: 100%;
+  box-shadow: none !important;
+  /* Eliminar la sombra */
+  border: none !important;
+  /* Eliminar el borde */
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  text-align: center;
+}
+
+.mat-cell {
+  text-align: center;
+}
+
+.mat-header-row {
+  background-color: #f0f0f0;
+  /* Color de fondo de la fila de cabecera */
+}
+
+.mat-row:nth-child(even) {
+  background-color: #f9f9f9;
+  /* Color de fondo de las filas pares */
+}
+
+.mat-cell.actions-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-icon-button {
+  margin: 0 5px;
+}
+
+.mat-elevation-z8 {
+  max-height: 450px;
+  /* Altura máxima de la tabla */
+  overflow: auto;
+  margin-top: 25px;
+  box-shadow: none !important;
+  /* Eliminar la sombra */
+}
+
+.search-container {
+  margin-top: 12px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  max-width: 400px;
+  /* Adjust maximum width of the search container */
+}
+
+.search-field {
+  flex: 1;
+  /* Expand to fill remaining space */
+  max-width: 300px;
+  /* Adjust maximum width of the search field */
+  margin-right: 15px;
+  /* Adjust spacing between search field and button */
+}
+
+.search-button {
+  min-width: 0;
+  margin-top: -15px;
+  /* Ensure button doesn't expand unnecessarily */
+}
+
+@media screen and (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .tab-content {
+    padding: 10px;
+  }
+
+  .product-form-card,
+  .product-form-card-editar,
+  .tabla-clientes-card {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 10px;
+  }
+
+  .button-container,
+  .button-container-editar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button-container button,
+  .button-container-editar button {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .product-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

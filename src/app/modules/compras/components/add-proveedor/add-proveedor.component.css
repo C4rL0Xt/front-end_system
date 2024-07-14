@@ -1,0 +1,86 @@
+.product-form-card {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.product-list {
+  grid-column: span 4;
+  margin-top: 20px;
+}
+
+.producto-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-product-button {
+  margin-top: 10px;
+}
+
+.action-buttons {
+  grid-column: span 2;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+::ng-deep .snack-bar-success {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .success-snack-bar {
+  animation: fadeIn 0.5s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.color-boton {
+  background-color: #2cc498 !important;
+}
+
+.color-boton-2 {
+  background-color:
+    #909090 !important;
+}

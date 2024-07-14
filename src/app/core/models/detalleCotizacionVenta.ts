@@ -3,4 +3,5 @@ export interface DetalleCotizacionVenta {
   producto: string;
   concentracion?: string;
   cantidad: number;
+  total: number;
 }
