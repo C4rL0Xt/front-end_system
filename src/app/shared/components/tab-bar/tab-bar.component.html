@@ -1,6 +1,8 @@
 <!-- tabbar.component.html -->
 <div class="tab-bar">
-  <div class="tab" *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab === activeTab">
-  {{ tab.label }}
+  <div class="tab" *ngFor="let tab of tabs"
+       (click)="selectTab(tab)"
+       [ngClass]="{ 'active': tab === activeTab || tab === tabForaneo }">
+    {{ tab.label }}
   </div>
 </div>

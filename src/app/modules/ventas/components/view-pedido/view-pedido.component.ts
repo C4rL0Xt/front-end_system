@@ -1,21 +1,23 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { PedidoService } from '../../services/pedido-service/pedido.service';
+import { Pedido } from '../../../../core/models/pedido.model';
 
-export interface Pedido {
-  idpedido: string;
-  idcotizacion: string;
-  idcliente: string;
-  metodopago: string;
-  estadoenvio: string;
-  idempleado: string;
-  fechaentrega: Date;
-  fechaemision: Date;
+
+export interface MetodoPago{
+  idMetodoPago: number;
+  metodo: string;
 }
 
+export interface EstadoEnvio{
+  idEstadoEnvio: number;
+  estado: string;
+}
 
 @Component({
   selector: 'app-view-pedido',
@@ -23,68 +25,71 @@ export interface Pedido {
   styleUrl: './view-pedido.component.css'
 })
 export class ViewPedidoComponent {
+
+  metodosP: MetodoPago[] = [
+    {
+      idMetodoPago: 1,
+      metodo: "Efectivo",  
+    },
+    {
+      idMetodoPago: 2,
+      metodo: "BBVA",  
+    },   
+    {
+      idMetodoPago: 3,
+      metodo: "ScotiaBank",  
+    },   
+    {
+      idMetodoPago: 4,
+      metodo: "BCP",  
+    }
+    ,
+    {
+      idMetodoPago: 5,
+      metodo: "PayPal",  
+    }
+  ]
+
+  estadosE: EstadoEnvio[] = [
+    {
+      idEstadoEnvio: 1,
+      estado: "En preparación",  
+    },
+    {
+      idEstadoEnvio: 2,
+      estado: "En transito",  
+    },
+    {
+      idEstadoEnvio: 3,
+      estado: "Entregado",  
+    },
+    {
+      idEstadoEnvio: 4,
+      estado: "Listo para enviar",  
+    }
+  ]
+
   displayedColumns: string[] = ['idpedido', 'idcotizacion', 'idcliente', 'metodopago', 'estadoenvio', 'idempleado', 'fechaentrega', 'fechaemision'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  pedidos: Pedido[] = [
-    {
-      idpedido: "PED-001",
-      idcotizacion: "COT-001",
-      idcliente: "CLI-001",
-      metodopago: "Tarjeta de crédito",
-      estadoenvio: "En preparacion",
-      idempleado: "EMP-001",
-      fechaentrega: new Date('2024-07-15'),
-      fechaemision: new Date('2024-07-01')
-    },
-    {
-      idpedido: "PED-002",
-      idcotizacion: "COT-002",
-      idcliente: "CLI-002",
-      metodopago: "Transferencia bancaria",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-002",
-      fechaentrega: new Date('2024-07-20'),
-      fechaemision: new Date('2024-07-05')
-    },
-    {
-      idpedido: "PED-003",
-      idcotizacion: "COT-003",
-      idcliente: "CLI-003",
-      metodopago: "Efectivo",
-      estadoenvio: "Listo para enviar",
-      idempleado: "EMP-003",
-      fechaentrega: new Date('2024-07-25'),
-      fechaemision: new Date('2024-07-10')
-    },
-    {
-      idpedido: "PED-004",
-      idcotizacion: "COT-004",
-      idcliente: "CLI-002",
-      metodopago: "Tarjeta de débito",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-001",
-      fechaentrega: new Date('2024-07-30'),
-      fechaemision: new Date('2024-07-15')
-    },
-    {
-      idpedido: "PED-005",
-      idcotizacion: "COT-005",
-      idcliente: "CLI-001",
-      metodopago: "Cheque",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-002",
-      fechaentrega: new Date('2024-08-01'),
-      fechaemision: new Date('2024-07-20')
-    }
-  ];
-
+  pedidos: Pedido[] = []; 
+ 
   dataSource: MatTableDataSource<Pedido> = new MatTableDataSource();
   selectOption: string = '';
 
-  constructor(){}
+  constructor(private pedidoService: PedidoService){}
+
+  loadPedidos(): void {
+    this.pedidoService.getAllPedidos().subscribe((response: Pedido[]) => {
+      console.log("Pedidos recibidos:  ", response);
+      this.pedidos = response;
+      this.dataSource = new MatTableDataSource(this.pedidos);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
 
   onTabSelected(router: string): void {
     this.selectOption = router;

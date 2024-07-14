@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { cotizacionVenta } from '../../../../core/models/cotizacionVenta';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -37,6 +37,8 @@ export class TablaCotizacionComponent implements OnInit {
     { id: 2, nombre: 'Cusco' },
     { id: 3, nombre: 'Arequipa' }
   ];
+
+  @Output() navigateToPedidos: EventEmitter<string> = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -204,6 +206,10 @@ export class TablaCotizacionComponent implements OnInit {
     this.resetFilters();
     this.cotizacionForm.reset();
     this.clearDetalles();
+  }
+
+  goToPedidos(idcotizacion: string){
+    this.navigateToPedidos.emit(idcotizacion);
   }
 
 }

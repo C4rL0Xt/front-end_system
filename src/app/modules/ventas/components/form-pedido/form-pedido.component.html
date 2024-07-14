@@ -2,7 +2,7 @@
     <div class="product-form-card">
         <mat-card-title class="titulo">Agregar Pedido</mat-card-title>
         <br>
-        <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+        <form [formGroup]="agregarPedidoForm" (ngSubmit)="onSubmit()" class="product-form-grid">
   
   
           <mat-form-field appearance="fill">
@@ -12,7 +12,7 @@
   
           <mat-form-field appearance="fill">
             <mat-label>Codigo Cotizacion</mat-label>
-            <input matInput formControlName="idcotizacion">
+            <input matInput formControlName="idcotizacion" [value]="idCotizacion">
           </mat-form-field>
   
           <mat-form-field appearance="fill">
@@ -23,8 +23,8 @@
           <mat-form-field appearance="fill">
             <mat-label>Estado Envio</mat-label>
             <mat-select formControlName="estadoenvio">
-              <mat-option *ngFor="let estado of estados" [value]="estado">
-                {{estado}}
+              <mat-option *ngFor="let estado of estadosE" [value]="estado">
+                {{estado.estado}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -32,8 +32,8 @@
           <mat-form-field appearance="fill">
             <mat-label>Metodo Pago</mat-label>
             <mat-select formControlName="metodopago">
-              <mat-option *ngFor="let metodo of metodos" [value]="metodo">
-                {{metodo}}
+              <mat-option *ngFor="let metodo of metodosP" [value]="metodo">
+                {{metodo.metodo}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -59,7 +59,8 @@
   
         </form>
         <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="onSave()">Guardar todo</button>
+          <button mat-raised-button color="primary" (click)="onSave()">Agregar</button>
+          <button mat-raised-button color="primary" (click)="actualizar()">Actualizar</button>
           <button mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
         </div>
       </div>
@@ -71,51 +72,51 @@
         <!-- Columns Definition -->
         <ng-container matColumnDef="idpedido">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idpedido}}
+          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idPedido}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="idcotizacion">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Pedido </th>
           <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.idcotizacion}} </td>
+            {{pedido.idCotizacion}} </td>
         </ng-container>
 
         <ng-container matColumnDef="idcliente">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> idCliente </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idcliente}}
+          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idCliente}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="metodopago">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Metodo pago </th>
           <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.metodopago}} </td>
+            {{getMetodoPago(pedido.idMetodoPago)}} </td>
         </ng-container>
-
+  
         <ng-container matColumnDef="estadoenvio">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Estado Envio </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.estadoenvio}}
-          </td>
+          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+            {{getEstadoEnvio(pedido.idEstadoEnvio)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="idempleado">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Codigo empleado </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idempleado}}
+          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idEmpleado}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaentrega">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de entrega</th>
           <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.fechaentrega | date: 'dd/MM/yyyy' }}
+            {{pedido.fechaEntrega | date: 'dd/MM/yyyy' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaemision">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de emision </th>
           <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.fechaemision | date: 'dd/MM/yyyy'}}
+            {{pedido.fechaEmision | date: 'dd/MM/yyyy'}}
           </td>
         </ng-container>
 

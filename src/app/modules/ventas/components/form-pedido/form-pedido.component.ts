@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Pedido } from '../../../../core/models/pedido.model';
+import { PedidoService } from '../../services/pedido-service/pedido.service';
 
+export interface MetodoPago{
+  idMetodoPago: number;
+  metodo: string;
+}
 
-export interface Pedido {
-  idpedido: string;
-  idcotizacion: string;
-  idcliente: string;
-  metodopago: string;
-  estadoenvio: string;
-  idempleado: string;
-  fechaentrega: Date;
-  fechaemision: Date;
+export interface EstadoEnvio{
+  idEstadoEnvio: number;
+  estado: string;
 }
 
 @Component({
@@ -22,60 +22,53 @@ export interface Pedido {
   templateUrl: './form-pedido.component.html',
   styleUrl: './form-pedido.component.css'
 })
-export class FormPedidoComponent implements OnInit{
+export class FormPedidoComponent implements OnInit, OnChanges{
 
-  pedidos: Pedido[] = [
+  @Input() idCotizacion: string;
+
+  metodosP: MetodoPago[] = [
     {
-      idpedido: "PED-001",
-      idcotizacion: "COT-001",
-      idcliente: "CLI-001",
-      metodopago: "Tarjeta de crédito",
-      estadoenvio: "En preparacion",
-      idempleado: "EMP-001",
-      fechaentrega: new Date('2024-07-15'),
-      fechaemision: new Date('2024-07-01')
+      idMetodoPago: 1,
+      metodo: "Efectivo",  
     },
     {
-      idpedido: "PED-002",
-      idcotizacion: "COT-002",
-      idcliente: "CLI-002",
-      metodopago: "Transferencia bancaria",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-002",
-      fechaentrega: new Date('2024-07-20'),
-      fechaemision: new Date('2024-07-05')
-    },
+      idMetodoPago: 2,
+      metodo: "BBVA",  
+    },   
     {
-      idpedido: "PED-003",
-      idcotizacion: "COT-003",
-      idcliente: "CLI-003",
-      metodopago: "Efectivo",
-      estadoenvio: "Listo para enviar",
-      idempleado: "EMP-003",
-      fechaentrega: new Date('2024-07-25'),
-      fechaemision: new Date('2024-07-10')
-    },
+      idMetodoPago: 3,
+      metodo: "ScotiaBank",  
+    },   
     {
-      idpedido: "PED-004",
-      idcotizacion: "COT-004",
-      idcliente: "CLI-002",
-      metodopago: "Tarjeta de débito",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-001",
-      fechaentrega: new Date('2024-07-30'),
-      fechaemision: new Date('2024-07-15')
-    },
-    {
-      idpedido: "PED-005",
-      idcotizacion: "COT-005",
-      idcliente: "CLI-001",
-      metodopago: "Cheque",
-      estadoenvio: "Entregado",
-      idempleado: "EMP-002",
-      fechaentrega: new Date('2024-08-01'),
-      fechaemision: new Date('2024-07-20')
+      idMetodoPago: 4,
+      metodo: "BCP",  
     }
-  ];
+    ,
+    {
+      idMetodoPago: 5,
+      metodo: "PayPal",  
+    }
+  ]
+
+  estadosE: EstadoEnvio[] = [
+    {
+      idEstadoEnvio: 1,
+      estado: "En preparación",  
+    },
+    {
+      idEstadoEnvio: 2,
+      estado: "En transito",  
+    },
+    {
+      idEstadoEnvio: 3,
+      estado: "Entregado",  
+    },
+    {
+      idEstadoEnvio: 4,
+      estado: "Listo para enviar",  
+    }
+  ]
+
 
   selectedTab: number = 1;
   selectOption: string = '';
@@ -85,34 +78,45 @@ export class FormPedidoComponent implements OnInit{
   ]
 
   dataSource: MatTableDataSource<Pedido> = new MatTableDataSource();
-  pedidoForm: FormGroup;
-  metodos = ['Cheque', 'Efectivo', 'Tarjeta de crédito', 'Tarjeta de débito', 'Transferencia bancaria'];
-  estados = ['En preparacion', 'En transito', 'Entregado', 'Listo para enviar', 'En proceso'];
+  agregarPedidoForm: FormGroup;
+  lastCode: string;
+
   displayedColumns: string[] = ['idpedido', 'idcotizacion', 'idcliente', 'metodopago', 'estadoenvio', 'idempleado', 'fechaentrega', 'fechaemision'];
+ 
+  pedidos: Pedido[] = []; 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  
+
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private pedidoService: PedidoService
   ) {
-    this.pedidoForm = this.fb.group({
-      idpedido: [''],
-      idcotizacion: [''],
-      idcliente: [''],
-      metodopago: [''],
-      estadoenvio: [''],
+    this.agregarPedidoForm = this.fb.group({
+      idpedido: [{ value: '', disabled: true }],
+      idcotizacion: [{ value: '', disabled: true }],
+      idcliente: ['',Validators.required],
+      metodopago: ['',Validators.required],
+      estadoenvio: [{ value: this.estadosE[0], disabled: true }],
       idempleado: [''],
-      fechaentrega: [''],
-      fechaemision: ['']
+      fechaentrega: ['',Validators.required],
+      fechaemision: ['',Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.pedidos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.loadLastCode();
+    this.loadPedidos();
+    console.log("Tabla cargada");
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idCotizacion'] && changes['idCotizacion'].currentValue) {
+      this.updatePedidoForm(this.idCotizacion);
+    }
   }
 
   onTabSelected(router: string): void {
@@ -121,24 +125,82 @@ export class FormPedidoComponent implements OnInit{
 
   }
 
+  loadLastCode(): void {
+    this.pedidoService.getLastCodePedido$().subscribe(code => {
+      this.agregarPedidoForm.patchValue({ idcodigo: code });    
+      this.generateCode(code);
+      console.log('ultim Code:', code);
+    });
+
+    this.agregarPedidoForm.patchValue({ idpedido: this.lastCode });
+  }
+
+  generateCode(last_code: string): void {
+    const lastCode = parseInt(last_code.substring(last_code.length - 3));
+    const newCode = lastCode + 1;
+    this.agregarPedidoForm.patchValue({ idpedido: `PE-00${newCode}` });
+    this.agregarPedidoForm.get('idpedido').disable();
+  }
+
+  loadPedidos(): void {
+    this.pedidoService.getAllPedidos().subscribe((response: Pedido[]) => {
+      console.log("Pedidos recibidos:  ", response);
+      this.pedidos = response;
+      this.dataSource = new MatTableDataSource(this.pedidos);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+
   onRowClicked(pedido: Pedido): void {
-    this.pedidoForm.patchValue({
-      idpedido: pedido.idpedido,
-      idcotizacion: pedido.idcotizacion,
-      idcliente: pedido.idcliente,
-      metodopago: pedido.metodopago,
-      estadoenvio: pedido.estadoenvio,
-      idempleado: pedido.idempleado,
-      fechaentrega: pedido.fechaentrega,
-      fechaemision: pedido.fechaemision
+    this.agregarPedidoForm.patchValue({
+      idpedido: pedido.idPedido,
+      idcotizacion: pedido.idCotizacion,
+      idcliente: pedido.idCliente,
+      metodopago: pedido.idMetodoPago,
+      estadoenvio: pedido.idEstadoEnvio,
+      idempleado: pedido.idEmpleado,
+      fechaentrega: pedido.fechaEntrega,
+      fechaemision: pedido.fechaEmision
     });
   }
 
   onCancel(): void {
-    this.pedidoForm.reset();
+    this.agregarPedidoForm.reset();
   }
 
   onSave(): void {
+    if (this.agregarPedidoForm.valid) {
+      const pedidoData = this.agregarPedidoForm.getRawValue();
+      const pedidoModel = {
+        idPedido: pedidoData.idpedido,
+        idCotizacion: pedidoData.idcotizacion,
+        idCliente: pedidoData.idcliente,
+        idMetodoPago: this.getIdMetodoPago(pedidoData.metodopago),
+        idEstadoEnvio: this.getIdEstadoEnvio(pedidoData.esstadoenvio),
+        idEmpleado: pedidoData.idempleado,
+        fechaEntrega: pedidoData.fechaentrega,
+        fechaEmision: pedidoData.fechaemision
+      };
+
+      console.log(pedidoModel);
+      this.pedidoService.createPedido(pedidoModel).subscribe((response) => {
+        console.log('Pedido save exitosamente: ', response);
+        this.agregarPedidoForm.reset();
+        this.loadLastCode();
+
+      }, (error) => {
+        console.error('Error al guardar el pedido', error);
+      }
+    );
+
+    }else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+
+    }
+  }
+
+  actualizar(): void {
     this.snackBar.open('Pedido actualizado exitosamente', 'Cerrar', {
       duration: 2000,
       panelClass: ['mat-toolbar', 'mat-primary'],
@@ -148,8 +210,35 @@ export class FormPedidoComponent implements OnInit{
   }
 
   onSubmit(): void {
-    if (this.pedidoForm.valid) {
-      console.log('Pedido actualizada exitosamente:', this.pedidoForm.getRawValue());
+    if (this.agregarPedidoForm.valid) {
+      console.log('Pedido guardado exitosamente:', this.agregarPedidoForm.getRawValue());
     }
   }
+
+  private updatePedidoForm(idCotizacion: string): void {
+      this.agregarPedidoForm.patchValue({
+        idcotizacion: idCotizacion
+      });
+  }
+
+  getMetodoPago(id: number): string {
+    const metodo = this.metodosP.find(m => m.idMetodoPago === id);
+    return metodo ? metodo.metodo : 'Desconocido';
+  }
+
+  getEstadoEnvio(id: number): string {
+    const estado = this.estadosE.find(e => e.idEstadoEnvio === id);
+    return estado ? estado.estado : 'Desconocido';
+  }
+
+  getIdMetodoPago(metodoN: string): number {
+    const metodo = this.metodosP.find(m => m.metodo === metodoN);
+    return metodo.idMetodoPago;
+  }
+
+  getIdEstadoEnvio(estadoN: string): number {
+    const estado = this.estadosE.find(e => e.estado === estadoN);
+    return estado.idEstadoEnvio;
+  }
+
 }

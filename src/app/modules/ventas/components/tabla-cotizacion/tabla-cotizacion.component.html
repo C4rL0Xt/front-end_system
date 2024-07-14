@@ -112,8 +112,8 @@
 
         <ng-container matColumnDef="actions">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef> Actions </th>
-          <td mat-cell *matCellDef="let factura">
-            <button mat-icon-button color="primary">
+          <td mat-cell *matCellDef="let cotizacion">
+            <button mat-icon-button color="primary" (click)="goToPedidos(cotizacion.idcotizacion)">
               <mat-icon>view_list</mat-icon>
             </button>
           </td>
