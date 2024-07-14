@@ -1,12 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { cotizacionVenta } from '../../../../core/models/cotizacionVenta';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetalleCotizacionVenta } from '../../../../core/models/detalleCotizacionVenta';
 import { CotiVentaService } from '../../services/cotizacion-v-service/coti-venta.service';
+import { ProductoService } from '../../../productos/services/product-service/producto.service';
+import { map, Observable, startWith, switchMap } from 'rxjs';
+import { Product } from '../../../../core/models/product.model';
+import { Estado } from '../../../../core/models/estado.model';
 
 interface Departamento {
   id: number;
@@ -25,18 +29,53 @@ export class TablaCotizacionComponent implements OnInit {
   cotizacionForm: FormGroup;
   filterForm: FormGroup;
 
+  isNewButtonEnabled = false;
+
   cotizacionControl = new FormControl();
   selectedCotizacion: cotizacionVenta | null = null;
-  estados = ['Pendiente', 'Pagado', 'Cancelado'];
   displayedColumns: string[] = ['idcotizacion', 'idempleado', 'estado', 'nombrecliente', 'montoproducto', 'fechaemision', 'email', 'montoimpuesto', 'montototal', 'departamento', 'actions'];
-
+  productos: Product[] = [];
+  selectedProducto: Product | null = null;
+  filteredOptions: Observable<Product[]>[] = [];
   cotizacionesFalsas: cotizacionVenta[] = [];
 
   departamentos: Departamento[] = [
-    { id: 1, nombre: 'Lima' },
-    { id: 2, nombre: 'Cusco' },
-    { id: 3, nombre: 'Arequipa' }
+    { id: 1, nombre: 'MOQUEGUA' },
+    { id: 2, nombre: 'LA LIBERTAD' },
+    { id: 3, nombre: 'LIMA' },
+    { id: 4, nombre: 'AREQUIPA' },
+    { id: 5, nombre: 'LORETO' },
+    { id: 6, nombre: 'PIURA' },
+    { id: 7, nombre: 'AYACUCHO' },
+    { id: 8, nombre: 'JUNIN' },
+    { id: 9, nombre: 'ICA' },
+    { id: 10, nombre: 'LAMBAYAQUE' },
+    { id: 11, nombre: 'CAJARMACA' },
+    { id: 12, nombre: 'UCAYALI' },
+    { id: 13, nombre: 'ANCASH' },
+    { id: 14, nombre: 'HUANCAVELICA' },
+    { id: 15, nombre: 'TUMBES' },
+    { id: 16, nombre: 'PUNO' },
+    { id: 17, nombre: 'TACNA' },
+    { id: 18, nombre: 'SAN MARTIN' },
+    { id: 19, nombre: 'AMAZONAS' },
+    { id: 20, nombre: 'PASCO' },
+    { id: 21, nombre: 'APURIMAC' },
+    { id: 22, nombre: 'MADRE DE DIOS' },
+    { id: 23, nombre: 'CUZCO' },
+    { id: 24, nombre: 'HUANUCO' }
   ];
+
+  estados: Estado[] = [{
+    id: 1,
+    nombre: 'Pendiente'
+  }, {
+    id: 2,
+    nombre: 'Aceptado'
+  }, {
+    id: 3,
+    nombre: 'Rechazado'
+  }];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -44,7 +83,8 @@ export class TablaCotizacionComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private cotizacionService: CotiVentaService
+    private cotizacionService: CotiVentaService,
+    private productService: ProductoService
   ) {
 
     this.filterForm = this.fb.group({
@@ -55,23 +95,44 @@ export class TablaCotizacionComponent implements OnInit {
     });
 
     this.cotizacionForm = this.fb.group({
-      idcotizacion: [''],
-      idempleado: [''],
-      estado: ['Pendiente'],
-      nombrecliente: [''],
-      montoproducto: [''],
-      fechaemision: [''],
-      email: [''],
-      montoimpuesto: [''],
-      montototal: [''],
-      departamento: [''],
+      idcotizacion: [{ value: '', disabled: true }],
+      idempleado: [{ value: '', disabled: true }],
+      estado: ['', Validators.required],
+      nombrecliente: ['', Validators.required],
+      montoproducto: [{ value: '', disabled: true }],
+      fechaemision: [{ value: '', disabled: true }],
+      email: ['', Validators.required],
+      montoimpuesto: [{ value: '', disabled: true }],
+      montototal: [{ value: '', disabled: true }],
+      departamento: ['', Validators.required],
       detalles: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
+    this.getProductos();
     this.getAllCotizaciones();
 
+  }
+
+  private _filter(value: string): Observable<Product[]> {
+    const filterValue = value ? value.toString().toLowerCase() : '';
+    return this.productService.getAllProducts().pipe(
+      map(products => products.filter(product => product.name.toLowerCase().includes(filterValue)))
+    );
+  }
+
+  getProductos(): void {
+    this.productService.getAllProducts().subscribe(products => {
+      this.productos = products;
+      console.log('Productos:', products);
+    });
+  }
+
+  onProductSelected(product: Product) {
+    this.selectedProducto = product;
+
+    console.log('Producto seleccionado: ', this.selectedProducto);
   }
 
   getAllCotizaciones(): void {
@@ -92,24 +153,87 @@ export class TablaCotizacionComponent implements OnInit {
   setDetalles(detalles: DetalleCotizacionVenta[]) {
     const detalleFormArray = this.cotizacionForm.get('detalles') as FormArray;
     detalleFormArray.clear();
+    this.filteredOptions = []; // Clear the filtered options array
+
     detalles.forEach(detalle => {
-      detalleFormArray.push(this.fb.group({
-        producto: detalle.producto,
-        cantidad: detalle.cantidad
-      }));
+      const detalleFormGroup = this.fb.group({
+        idcotizacion: [{ value: detalle.idcotizacion, disabled: true }],
+        producto: [detalle.producto, Validators.required],
+        concentracion: [detalle.concentracion],
+        cantidad: [detalle.cantidad, Validators.required],
+        total: [{ value: detalle.total, disabled: true }]
+      });
+
+      const productoControl = detalleFormGroup.get('producto');
+      this.filteredOptions.push(productoControl.valueChanges.pipe(
+        startWith(''),
+        switchMap(value => this._filter(value))
+      ));
+
+      productoControl.valueChanges.subscribe(value => {
+        const selectedProduct = this.productos.find(producto => producto.name === value);
+        if (selectedProduct) {
+          detalleFormGroup.patchValue({
+            concentracion: selectedProduct.concentracion
+          });
+        }
+      });
+
+      detalleFormArray.push(detalleFormGroup);
     });
   }
 
-  addDetalle(): void {
+  initDetalle(): FormGroup {
     const detalleFormGroup = this.fb.group({
-      producto: [''],
-      cantidad: ['']
+      idcotizacion: [{ value: this.cotizacionForm.get('idcotizacion').value, disabled: true }],
+      producto: ['', Validators.required],
+      concentracion: [''],
+      cantidad: ['', Validators.required],
+      total: [{ value: '', disabled: true }]
     });
-    this.detalles.push(detalleFormGroup);
+
+    const productoControl = detalleFormGroup.get('producto');
+    this.filteredOptions.push(productoControl.valueChanges.pipe(
+      startWith(''),
+      switchMap(value => this._filter(value))
+    ));
+    console.log('Entro a initDetalle');
+    productoControl.valueChanges.subscribe(value => {
+      const selectedProduct = this.productos.find(producto => producto.name === value);
+
+      if (selectedProduct) {
+
+        detalleFormGroup.patchValue({
+          concentracion: selectedProduct.concentracion
+        });
+        console.log('Concentracion:', selectedProduct.concentracion);
+      }
+    });
+
+    return detalleFormGroup;
   }
+
+
+  addDetalle(): void {
+
+    this.detalles.push(this.initDetalle());
+  }
+
+
 
   removeDetalle(index: number) {
     const detalleFormArray = this.cotizacionForm.get('detalles') as FormArray;
+    const detalle = {
+      idcotizacion: this.cotizacionForm.get('idcotizacion').value,
+      producto: detalleFormArray.at(index).get('producto').value,
+      cantidad: detalleFormArray.at(index).get('cantidad').value,
+      concentracion: detalleFormArray.at(index).get('concentracion').value,
+      total: detalleFormArray.at(index).get('total').value
+    }
+    console.log('Eliminando detalle en el indice:', detalle);
+    this.cotizacionService.deleteDetalleCotizacionVenta(detalle).subscribe((response) => {
+      console.log('Detalle eliminado exitosamente:', response);
+    });
     detalleFormArray.removeAt(index);
   }
 
@@ -119,10 +243,7 @@ export class TablaCotizacionComponent implements OnInit {
     console.log('Cotizacion seleccionada: ', cotizacion);
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+
 
   resetFilters() {
     this.filterForm.reset();
@@ -130,32 +251,75 @@ export class TablaCotizacionComponent implements OnInit {
   }
 
   onRowClicked(cotizacion: cotizacionVenta): void {
+    this.selectedCotizacion = cotizacion;
+
+    // Asegurarse de que la fecha esté en el formato correcto (YYYY-MM-DD)
+    const fechaEmision = new Date(cotizacion.fechaemision).toISOString().split('T')[0];
+
+    // Encontrar los valores correspondientes en los arrays de estados y departamentos
+    const estadoSeleccionado = this.estados.find(estado => estado.nombre === cotizacion.estado);
+    const departamentoSeleccionado = this.departamentos.find(departamento => departamento.nombre === cotizacion.departamento);
+
     this.cotizacionForm.patchValue({
       idcotizacion: cotizacion.idcotizacion,
       idempleado: cotizacion.idempleado,
-      estado: cotizacion.estado,
+      estado: estadoSeleccionado ? estadoSeleccionado.nombre : '',
       nombrecliente: cotizacion.nombrecliente,
       montoproducto: cotizacion.montoproducto,
-      fechaemision: cotizacion.fechaemision,
+      fechaemision: fechaEmision,
       email: cotizacion.email,
       montoimpuesto: cotizacion.montoimpuesto,
       montototal: cotizacion.montototal,
-      departamento: cotizacion.departamento
+      departamento: departamentoSeleccionado ? departamentoSeleccionado.nombre : ''
     });
-
 
     this.setDetalles(cotizacion.detalles);
     this.index_size = cotizacion.detalles.length;
     console.log('Cotizacion seleccionada:', this.index_size);
+    this.isNewButtonEnabled = true;
   }
 
+
   onSave() {
-    this.snackBar.open('Factura guardada exitosamente', 'Cerrar', {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-primary'],
-      verticalPosition: 'top',
-      horizontalPosition: 'center'
-    });
+    if (this.cotizacionForm.valid) {
+      console.log('Hola');
+      const cotizacionData = this.cotizacionForm.getRawValue();
+      const cotizacionVentaDto = {
+        idcotizacion: cotizacionData.idcotizacion,
+        idempleado: cotizacionData.idempleado,
+        estado: cotizacionData.estado,
+        nombrecliente: cotizacionData.nombrecliente,
+        montoproducto: cotizacionData.montoproducto,
+        fechaemision: cotizacionData.fechaemision,
+        email: cotizacionData.email,
+        montoimpuesto: cotizacionData.montoimpuesto,
+        montototal: cotizacionData.montototal,
+        departamento: cotizacionData.departamento,
+        detalles: cotizacionData.detalles
+      };
+
+      this.cotizacionService.updateCotizacionVenta(cotizacionVentaDto).subscribe(
+        (response) => {
+
+          console.log('Respuesta', response);
+          this.snackBar.open('Factura guardada exitosamente', 'Cerrar', {
+            duration: 2000,
+            panelClass: ['mat-toolbar', 'mat-primary'],
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          });
+
+          console.log('Cotizacion guardada:', cotizacionVentaDto);
+          this.cotizacionForm.reset();
+          this.getAllCotizaciones();
+          this.clearDetalles();
+
+          this.isNewButtonEnabled = false;
+        }
+      );
+    } else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
+    }
   }
 
   applyFilter(event: any, column: string) {
@@ -188,11 +352,49 @@ export class TablaCotizacionComponent implements OnInit {
 
   }
 
-  cancel(): void {
-    this.cotizacionForm.reset();
-    this.clearDetalles();
+  calculateTotal(): void {
+    if (this.cotizacionForm.valid) {
+      const cotizacionData = this.cotizacionForm.getRawValue();
+      console.log('Cotizacion data:', cotizacionData);
 
+      const cotizacionVentaDto = {
+        idcotizacion: cotizacionData.idcotizacion,
+        idempleado: cotizacionData.idempleado,
+        estado: cotizacionData.estado,
+        nombrecliente: cotizacionData.nombrecliente,
+        montoproducto: cotizacionData.montoproducto,
+        fechaemision: cotizacionData.fechaemision,
+        email: cotizacionData.email,
+        montoimpuesto: cotizacionData.montoimpuesto,
+        montototal: cotizacionData.montototal,
+        departamento: cotizacionData.departamento,
+        detalles: cotizacionData.detalles
+      };
+
+      console.log('Esto envio', cotizacionVentaDto);
+
+      this.cotizacionService.getMontoCotizacionVenta(cotizacionVentaDto).subscribe(
+        (response: cotizacionVenta) => {
+          console.log('Cotizacion con montos:', response);
+          this.cotizacionForm.patchValue({
+            montoproducto: response.montoproducto,
+            montoimpuesto: response.montoimpuesto,
+            montototal: response.montototal,
+            detalles: response.detalles
+          });
+        });
+
+
+      this.snackBar.open('Calculamos montos!', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['snack-bar-success'],
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
+    }
   }
+
+
 
   clearDetalles() {
     const detalleFormArray = this.cotizacionForm.get('detalles') as FormArray;
@@ -204,6 +406,7 @@ export class TablaCotizacionComponent implements OnInit {
     this.resetFilters();
     this.cotizacionForm.reset();
     this.clearDetalles();
+    this.isNewButtonEnabled = false;
   }
 
 }

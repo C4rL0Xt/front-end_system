@@ -156,7 +156,8 @@ export class FormCotizacionComponent implements OnInit {
       idcotizacion: [{ value: this.cotizacionForm.get('idcotizacion').value, disabled: true }],
       producto: ['', Validators.required],
       concentracion: [''],
-      cantidad: ['', Validators.required]
+      cantidad: ['', Validators.required],
+      total: [{ value: '', disabled: true }]
     });
 
     const productoControl = detalleFormGroup.get('producto');
@@ -219,7 +220,8 @@ export class FormCotizacionComponent implements OnInit {
           this.cotizacionForm.patchValue({
             montoproducto: response.montoproducto,
             montoimpuesto: response.montoimpuesto,
-            montototal: response.montototal
+            montototal: response.montototal,
+            detalles: response.detalles
           });
         });
 

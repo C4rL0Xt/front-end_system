@@ -1,7 +1,6 @@
 <mat-card class="product-form-card">
   <mat-card-title class="titulo">Cotizaciones</mat-card-title>
   <div class="mat-elevation-z8">
-
     <form [formGroup]="filterForm">
       <div class="filters-container" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="center center">
         <mat-form-field appearance="fill" fxFlex.gt-sm="30" fxFlex.sm="45" fxFlex.xs="100">
@@ -15,7 +14,7 @@
           <mat-select (selectionChange)="applyFilter($event, 'estado')" formControlName="estado"
             placeholder="Estado de Pago">
             <mat-option value="">Todos</mat-option>
-            <mat-option *ngFor="let estado of estados" [value]="estado">{{estado}}</mat-option>
+            <mat-option *ngFor="let estado of estados" [value]="estado.nombre">{{estado.nombre}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -81,7 +80,6 @@
             {{cotizacion.fechaemision | date: 'dd/MM/yyyy' }} </td>
         </ng-container>
 
-
         <ng-container matColumnDef="email">
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Email</th>
           <td class="font-test" mat-cell *matCellDef="let cotizacion" (click)="onRowClicked(cotizacion)">
@@ -130,7 +128,7 @@
 
   <mat-card class="product-form-card">
     <mat-card-title>Registrar Cotización</mat-card-title>
-    <form [formGroup]="cotizacionForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+    <form [formGroup]="cotizacionForm" class="product-form-grid" fxLayout="row wrap" fxLayoutGap="16px">
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>ID Cotización</mat-label>
         <input matInput formControlName="idcotizacion">
@@ -141,11 +139,10 @@
         <input matInput formControlName="idempleado">
       </mat-form-field>
 
-
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>Estado</mat-label>
         <mat-select formControlName="estado">
-          <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado }}</mat-option>
+          <mat-option *ngFor="let estado of estados" [value]="estado.nombre">{{ estado.nombre }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -153,7 +150,6 @@
         <mat-label>Nombre Cliente</mat-label>
         <input matInput formControlName="nombrecliente">
       </mat-form-field>
-
 
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>Monto Producto</mat-label>
@@ -165,8 +161,6 @@
         <input matInput formControlName="fechaemision" type="date">
       </mat-form-field>
 
-
-
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" type="email">
@@ -176,7 +170,6 @@
         <mat-label>Monto Impuesto</mat-label>
         <input matInput formControlName="montoimpuesto" type="number">
       </mat-form-field>
-
 
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>Monto Total</mat-label>
@@ -191,38 +184,52 @@
         </mat-select>
       </mat-form-field>
 
-
-      <div class="product-list">
+      <div class="product-list" fxFlex="100">
         <h1><strong>Detalles</strong></h1>
         <div formArrayName="detalles" fxLayout="column" fxLayoutGap="16px">
-          <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i" class="producto-form">
-            <mat-form-field appearance="fill">
+          <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i" class="producto-form"
+            fxLayout="row wrap" fxLayoutGap="16px">
+
+            <mat-form-field appearance="fill" fxFlex="40">
               <mat-label>Producto</mat-label>
-              <input matInput formControlName="producto">
+              <input type="text" matInput formControlName="producto" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event.option.value)">
+                <mat-option *ngFor="let option of filteredOptions[i]| async" [value]="option.name">
+                  {{option.name}}-{{option.concentracion}}-{{option.presentation}}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
 
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" fxFlex="20">
               <mat-label>Cantidad</mat-label>
               <input matInput formControlName="cantidad" type="number">
             </mat-form-field>
 
-            <button mat-icon-button color="warn" (click)="removeDetalle(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            <mat-form-field appearance="fill" fxFlex="20">
+              <mat-label>Total</mat-label>
+              <input matInput formControlName="total" type="number">
+            </mat-form-field>
+
+            <div fxFlex="10" class="delete-button">
+              <button mat-icon-button color="warn" (click)="removeDetalle(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="action-buttons">
-        <button mat-fab extended color="primary" type="button" (click)="addDetalle()">Nuevo
+      <div class="action-buttons" fxFlex="100">
+        <button mat-fab extended color="primary" type="button" (click)="addDetalle()"
+          [disabled]="!isNewButtonEnabled">Nuevo
           <mat-icon>add</mat-icon></button>
       </div>
     </form>
-    <div class="action-buttons">
-      <button mat-raised-button color="accent" type="button" (click)="asignarDetalles()">Agregar Producto (s)</button>
+    <div class="action-buttons" fxFlex="100">
+      <button mat-raised-button color="accent" type="button" (click)="calculateTotal()">Agregar Producto (s)</button>
     </div>
-    <div class="action-buttons">
-      <button mat-raised-button color="primary" type="submit">Guardar</button>
+    <div class="action-buttons" fxFlex="100">
+      <button mat-raised-button color="primary" type="submit" (click)="onSave()">Guardar</button>
       <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancelar</button>
     </div>
   </mat-card>
