@@ -1,7 +1,7 @@
 <mat-card class="product-form-card">
   <mat-card-title class="titulo">Cotizaciones</mat-card-title>
   <div class="mat-elevation-z8">
-    <form [formGroup]="filterForm">
+    <!--form [formGroup]="filterForm">
       <div class="filters-container" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="center center">
         <mat-form-field appearance="fill" fxFlex.gt-sm="30" fxFlex.sm="45" fxFlex.xs="100">
           <mat-label>Buscar por Código de Pedido</mat-label>
@@ -19,8 +19,8 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex.gt-sm="30" fxFlex.sm="45" fxFlex.xs="100">
-          <mat-label>Digita el dni</mat-label>
-          <input type="text" matInput (input)="applyFilter($event, 'nombrecliente')" formControlName="dni"
+          <mat-label>Digita el nombre de cliente</mat-label>
+          <input type="text" matInput (input)="applyFilter($event, 'nombrecliente')" formControlName="nombrecliente"
             placeholder="Nombre de Cliente">
         </mat-form-field>
 
@@ -34,7 +34,7 @@
 
         <button mat-raised-button color="primary" (click)="resetFilters()">Reset</button>
       </div>
-    </form>
+    </!--form-->
 
     <div class="responsive-table-container">
       <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
@@ -57,13 +57,6 @@
           <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
           <td class="font-test" mat-cell *matCellDef="let cotizacion" (click)="onRowClicked(cotizacion)">
             {{cotizacion.estado}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="dni">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header>DNI </th>
-          <td class="font-test" mat-cell *matCellDef="let cotizacion" (click)="onRowClicked(cotizacion)">
-            {{cotizacion.dni}}
           </td>
         </ng-container>
 
@@ -135,106 +128,43 @@
 
   <mat-card class="product-form-card">
     <mat-card-title>Registrar Cotización</mat-card-title>
-    <form [formGroup]="cotizacionForm" class="product-form-grid" fxLayout="row wrap" fxLayoutGap="16px">
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>ID Cotización</mat-label>
-        <input matInput formControlName="idcotizacion">
+    <form [formGroup]="proveedorForm" class="product-form-grid" fxLayout="row wrap" fxLayoutGap="16px">
+      <mat-form-field appearance="fill">
+        <mat-label>Codigo Proveedor</mat-label>
+        <input matInput formControlName="idproveedor">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>ID Empleado</mat-label>
-        <input matInput formControlName="idempleado">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Empresa</mat-label>
+        <input matInput formControlName="empresa">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="estado">
-          <mat-option *ngFor="let estado of estados" [value]="estado.nombre">{{ estado.nombre }}</mat-option>
-        </mat-select>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Direccion</mat-label>
+        <input matInput formControlName="direccion">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Nombre Cliente</mat-label>
-        <input matInput formControlName="nombrecliente">
+      <mat-form-field appearance="fill">
+        <mat-label>Telefono</mat-label>
+        <input matInput formControlName="telefono">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Monto Producto</mat-label>
-        <input matInput formControlName="montoproducto" type="number">
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Fecha Emisión</mat-label>
-        <input matInput formControlName="fechaemision" type="date">
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" fxFlex="50">
+      <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" type="email">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Monto Impuesto</mat-label>
-        <input matInput formControlName="montoimpuesto" type="number">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>RUC</mat-label>
+        <input matInput formControlName="ruc" type="text">
       </mat-form-field>
 
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Monto Total</mat-label>
-        <input matInput formControlName="montototal" type="number">
+      <mat-form-field appearance="fill">
+        <mat-label>Rating</mat-label>
+        <input matInput formControlName="rate" type="number">
       </mat-form-field>
-
-      <mat-form-field appearance="fill" fxFlex="50">
-        <mat-label>Departamento</mat-label>
-        <mat-select formControlName="departamento">
-          <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">{{ departamento.nombre
-            }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="product-list" fxFlex="100">
-        <h1><strong>Detalles</strong></h1>
-        <div formArrayName="detalles" fxLayout="column" fxLayoutGap="16px">
-          <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i" class="producto-form"
-            fxLayout="row wrap" fxLayoutGap="16px">
-
-            <mat-form-field appearance="fill" fxFlex="40">
-              <mat-label>Producto</mat-label>
-              <input type="text" matInput formControlName="producto" [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event.option.value)">
-                <mat-option *ngFor="let option of filteredOptions[i]| async" [value]="option.name">
-                  {{option.name}}-{{option.concentracion}}-{{option.presentation}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" fxFlex="20">
-              <mat-label>Cantidad</mat-label>
-              <input matInput formControlName="cantidad" type="number">
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" fxFlex="20">
-              <mat-label>Total</mat-label>
-              <input matInput formControlName="total" type="number">
-            </mat-form-field>
-
-            <div fxFlex="10" class="delete-button">
-              <button mat-icon-button color="warn" (click)="removeDetalle(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="action-buttons" fxFlex="100">
-        <button mat-fab extended color="primary" type="button" (click)="addDetalle()"
-          [disabled]="!isNewButtonEnabled">Nuevo
-          <mat-icon>add</mat-icon></button>
-      </div>
     </form>
-    <div class="action-buttons" fxFlex="100">
-      <button mat-raised-button color="accent" type="button" (click)="calculateTotal()">Agregar Producto (s)</button>
-    </div>
+
     <div class="action-buttons" fxFlex="100">
       <button mat-raised-button color="primary" type="submit" (click)="onSave()">Guardar</button>
       <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancelar</button>

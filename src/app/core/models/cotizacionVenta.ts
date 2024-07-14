@@ -11,5 +11,6 @@ export interface cotizacionVenta {
   montoimpuesto: number;
   montototal: number;
   departamento: string;
+  dni: string;
   detalles: DetalleCotizacionVenta[];
 }

@@ -76,6 +76,7 @@ export class FormCotizacionComponent implements OnInit {
       montoimpuesto: [{ value: '', disabled: true }],
       montototal: [{ value: '', disabled: true }],
       departamento: ['', Validators.required],
+      dni: ['', Validators.required],
       detalles: this.fb.array([])
     });
   }
@@ -209,6 +210,7 @@ export class FormCotizacionComponent implements OnInit {
         montoimpuesto: cotizacionData.montoimpuesto,
         montototal: cotizacionData.montototal,
         departamento: cotizacionData.departamento,
+        dni: cotizacionData.dni,
         detalles: cotizacionData.detalles
       };
 
@@ -255,6 +257,7 @@ export class FormCotizacionComponent implements OnInit {
         montoimpuesto: cotizacionData.montoimpuesto,
         montototal: cotizacionData.montototal,
         departamento: cotizacionData.departamento,
+        dni: cotizacionData.dni,
         detalles: cotizacionData.detalles
       };
 

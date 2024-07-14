@@ -33,7 +33,7 @@ export class TablaCotizacionComponent implements OnInit {
 
   cotizacionControl = new FormControl();
   selectedCotizacion: cotizacionVenta | null = null;
-  displayedColumns: string[] = ['idcotizacion', 'idempleado', 'estado', 'nombrecliente', 'montoproducto', 'fechaemision', 'email', 'montoimpuesto', 'montototal', 'departamento', 'actions'];
+  displayedColumns: string[] = ['idcotizacion', 'idempleado', 'estado', 'dni', 'nombrecliente', 'montoproducto', 'fechaemision', 'email', 'montoimpuesto', 'montototal', 'departamento', 'actions'];
   productos: Product[] = [];
   selectedProducto: Product | null = null;
   filteredOptions: Observable<Product[]>[] = [];
@@ -90,7 +90,7 @@ export class TablaCotizacionComponent implements OnInit {
     this.filterForm = this.fb.group({
       idcotizacion: [''],
       estado: [''],
-      nombrecliente: [''],
+      dni: [''],
       fechaemision: [''],
     });
 
@@ -295,6 +295,7 @@ export class TablaCotizacionComponent implements OnInit {
         montoimpuesto: cotizacionData.montoimpuesto,
         montototal: cotizacionData.montototal,
         departamento: cotizacionData.departamento,
+        dni: cotizacionData.dni,
         detalles: cotizacionData.detalles
       };
 
@@ -328,14 +329,14 @@ export class TablaCotizacionComponent implements OnInit {
       const searchTerms = JSON.parse(filter);
       return (searchTerms.idcotizacion ? data.idcotizacion.toLowerCase().includes(searchTerms.idcotizacion) : true)
         && (searchTerms.estado ? data.estado.toLowerCase().includes(searchTerms.estado) : true)
-        && (searchTerms.nombrecliente ? data.nombrecliente.toLowerCase().includes(searchTerms.nombrecliente) : true)
+        && (searchTerms.dni ? data.dni.toLowerCase().includes(searchTerms.dni) : true)
         && (searchTerms.fechaemision ? new Date(data.fechaemision).toDateString() === new Date(searchTerms.fechaemision).toDateString() : true);
     };
 
     const searchTerms = {
       idcotizacion: column === 'idcotizacion' ? filterValue.trim().toLowerCase() : '',
       estado: column === 'estado' ? filterValue.trim().toLowerCase() : '',
-      nombrecliente: column === 'nombrecliente' ? filterValue.trim().toLowerCase() : '',
+      dni: column === 'dni' ? filterValue.trim().toLowerCase() : '',
       fechaemision: column === 'fechaemision' ? new Date(filterValue).toISOString() : ''
     };
 
@@ -368,6 +369,7 @@ export class TablaCotizacionComponent implements OnInit {
         montoimpuesto: cotizacionData.montoimpuesto,
         montototal: cotizacionData.montototal,
         departamento: cotizacionData.departamento,
+        dni: cotizacionData.dni,
         detalles: cotizacionData.detalles
       };
 
