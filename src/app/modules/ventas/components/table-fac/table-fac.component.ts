@@ -88,7 +88,7 @@ export class TableFacComponent implements OnInit,AfterViewInit,OnChanges {
     this.facturaService.getAllFacturas().subscribe((response: FacturaVenta[]) => {
 
       this.facturas = response;
-      console.log("Pedidos en el arreglo de pedidos: ", this.facturas);
+      console.log("Facturas: ", this.facturas);
       this.dataSource = new MatTableDataSource(this.facturas = this.facturas.map(factura => {
         factura.fechaLimite = this.adjustDate(factura.fechaLimite);
         if (factura.fechaPago) {
