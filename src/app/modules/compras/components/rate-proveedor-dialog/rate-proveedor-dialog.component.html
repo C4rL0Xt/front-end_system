@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Calificar Proveedor</h2>
+<mat-dialog-content @fadeInOut>
+  <div class="rate-container">
+    <div class="example-label-container">
+      <label id="example-name-label" class="example-name-label">Calidad</label>
+      <label class="example-value-label">{{calidad}}</label>
+    </div>
+    <mat-slider min="0" max="10" step="1" showTickMarks discrete [displayWith]="formatLabel">
+      <input matSliderThumb [(ngModel)]="calidad">
+    </mat-slider>
+
+    <div class="example-label-container">
+      <label id="example-name-label" class="example-name-label">Precio</label>
+      <label class="example-value-label">{{precio}}</label>
+    </div>
+    <mat-slider min="0" max="10" step="1" showTickMarks discrete [displayWith]="formatLabel">
+      <input matSliderThumb [(ngModel)]="precio">
+    </mat-slider>
+
+    <div class="example-label-container">
+      <label id="example-name-label" class="example-name-label">Cumplimiento</label>
+      <label class="example-value-label">{{cumplimiento}}</label>
+    </div>
+    <mat-slider min="0" max="10" step="1" showTickMarks discrete [displayWith]="formatLabel">
+      <input matSliderThumb [(ngModel)]="cumplimiento">
+    </mat-slider>
+  </div>
+  <div class="average-rate">
+    <h3>Promedio: {{ ((calidad + precio + cumplimiento) / 3).toFixed(1) }}</h3>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onSave()">Guardar</button>
+  <button mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

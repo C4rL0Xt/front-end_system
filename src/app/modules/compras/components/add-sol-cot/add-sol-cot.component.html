@@ -1,0 +1,91 @@
+<div class="container">
+  <h2>Crear Solicitud de Cotización</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Sección de Selección de Solicitudes de Compra -->
+    <mat-card class="section" [@slideInOut]>
+      <h3>Seleccionar Solicitud de Compra</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Solicitudes de Compra</mat-label>
+        <mat-select formControlName="selectedPurchaseRequest" (selectionChange)="onPurchaseRequestSelectionChange($event)">
+          <mat-option *ngFor="let request of purchaseRequests" [value]="request.id_solicitud">
+            {{ request.id_solicitud }} - {{ request.nombreProducto }} - {{ request.cantidadRequerida }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
+
+    <!-- Sección de Detalles Generales -->
+    <mat-card class="section" [@slideInOut]>
+      <h3>Detalles de la Solicitud de Compra</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Número de Solicitud de Compra</mat-label>
+        <input matInput formControlName="purchaseRequestNumber">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Fecha de Solicitud</mat-label>
+        <input matInput type="date" formControlName="purchaseRequestDate">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="purchaseRequestDescription"></textarea>
+      </mat-form-field>
+    </mat-card>
+
+    <!-- Sección de Selección de Proveedores -->
+    <mat-card class="section" [@slideInOut]>
+      <h3>Seleccionar Proveedores</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Proveedores</mat-label>
+        <mat-chip-grid #chipGrid formControlName="proveedoresSeleccionados">
+          <mat-chip-row *ngFor="let proveedor of proveedoresSeleccionados" [removable]="true" (removed)="remove(proveedor)">
+            {{ proveedor.empresa }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip-row>
+          <input
+            placeholder="Selecciona proveedores"
+            [matAutocomplete]="auto"
+            [formControl]="proveedoresCtrl"
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)">
+        </mat-chip-grid>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="displayProveedor">
+          <mat-option *ngFor="let proveedor of proveedoresFiltrados | async" [value]="proveedor">
+            {{ proveedor.empresa }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-card>
+
+    <!-- Sección de Detalles de la Solicitud de Cotización -->
+    <mat-card class="section" [@slideInOut]>
+      <h3>Detalles de la Solicitud de Cotización</h3>
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="solicitudcotizacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Cotización</th>
+          <td mat-cell *matCellDef="let solicitud">{{ solicitud.idsolicitudcotizacion }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="solicitudcompra">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Solicitud</th>
+          <td mat-cell *matCellDef="let solicitud">{{ solicitud.idsolicitudcompra }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechacreacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Creación</th>
+          <td mat-cell *matCellDef="let solicitud">{{ solicitud.fechacreacion | date: 'dd/MM/yyyy'  }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </mat-card>
+
+    <!-- Sección de Acciones -->
+    <div class="actions" [@slideInOut]>
+      <button mat-raised-button color="primary" type="submit">Crear Solicitud de Cotización</button>
+    </div>
+  </form>
+</div>

@@ -27,7 +27,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
 import { EditProveedorComponent } from './components/edit-proveedor/edit-proveedor.component';
+import { AddSolCotComponent } from './components/add-sol-cot/add-sol-cot.component';
+import { EditSolCotComponent } from './components/edit-sol-cot/edit-sol-cot.component';
+import { EditDetSolCotComponent } from './components/edit-det-sol-cot/edit-det-sol-cot.component';
+import { OrdenCompraComponent } from './components/orden-compra/orden-compra.component';
+import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
+import { RateProveedorDialogComponent } from './components/rate-proveedor-dialog/rate-proveedor-dialog.component';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -35,12 +43,20 @@ import { EditProveedorComponent } from './components/edit-proveedor/edit-proveed
     DocumentosPageComponent,
     ProveedorPageComponent,
     AddProveedorComponent,
-    EditProveedorComponent
+    EditProveedorComponent,
+    AddSolCotComponent,
+    EditSolCotComponent,
+    EditDetSolCotComponent,
+    OrdenCompraComponent,
+    FacturaCompraComponent,
+    RateProveedorDialogComponent
   ],
   imports: [
     CommonModule,
     ComprasRoutingModule,
+    MatChipsModule,
     FormsModule,
+    MatSliderModule,
     ReactiveFormsModule,
     SharedModule,
     MatCardModule,

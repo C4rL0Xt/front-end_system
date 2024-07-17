@@ -1,1 +1,23 @@
-<p>cotizaciones-page works!</p>
+<div class="main-content">
+  <div class="tab-container">
+    <app-tab-bar [tabs]="tabs" (tabSelected)="onTabSelected($event)"></app-tab-bar>
+    <div class="tab-content">
+      <div *ngIf="selectOption === '/cotizacion/new'">
+        <ng-container *ngTemplateOutlet="agregarSolicitud"></ng-container>
+      </div>
+      <div *ngIf="selectOption === '/cotizacion/edit'">
+        <ng-container *ngTemplateOutlet="editarSolicitud"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #agregarSolicitud>
+  <app-add-sol-cot></app-add-sol-cot>
+
+</ng-template>
+
+<ng-template #editarSolicitud>
+  <app-edit-sol-cot></app-edit-sol-cot>
+</ng-template>
+
