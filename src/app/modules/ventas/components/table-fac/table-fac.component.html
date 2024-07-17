@@ -14,8 +14,8 @@
             <mat-label>Buscar por Estado de Pago</mat-label>
             <mat-select (selectionChange)="applyFilter($event, 'estadopago')" formControlName="estadoPago"
               placeholder="Estado de Pago">
-              <mat-option *ngFor="let estado of estados" [value]="estado">
-                {{estado}}
+              <mat-option *ngFor="let estado of estados" [value]="estado.estado">
+                {{estado.estado}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -29,39 +29,39 @@
       <!-- Columns Definition -->
       <ng-container matColumnDef="codigo">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> {{factura.codigo}}
+        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> {{factura.idFactura}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="codigopedido">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Pedido </th>
         <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)">
-          {{factura.codigopedido}} </td>
+          {{factura.idPedido}} </td>
       </ng-container>
 
       <ng-container matColumnDef="estadopago">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Estado de pago </th>
-        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> {{factura.estadopago}}
+        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> {{getEstado(factura.idEstadoPago)}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="fechalimitedepago">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Límite </th>
         <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)">
-          {{factura.fechalimitedepago | date: 'dd/MM/yyyy' }} </td>
+          {{factura.fechaLimite | date: 'dd/MM/yyyy' }} </td>
       </ng-container>
 
       <ng-container matColumnDef="fechapago">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de pago </th>
-        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> {{factura.fechapago |
-          date: 'dd/MM/yyyy' }}
+        <td class="font-test" mat-cell *matCellDef="let factura" (click)="onRowClicked(factura)"> 
+          {{ (factura.fechaPago | date: 'dd/MM/yyyy')}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th class="font-cabecera" mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let factura">
-          <button mat-icon-button color="primary">
+          <button mat-icon-button color="primary" >
             <mat-icon>view_list</mat-icon>
           </button>
         </td>
@@ -75,43 +75,44 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
   <div class="product-form-card">
-    <form [formGroup]="facturaForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+    <h2>Editar Factura</h2>
+    <form [formGroup]="editarFacturaForm" (ngSubmit)="onSubmit()" class="product-form-grid">
       <mat-form-field appearance="fill">
         <mat-label>Codigo Factura</mat-label>
-        <input matInput formControlName="facturaCodigo">
+        <input matInput formControlName="idfactura">
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Codigo Pedido</mat-label>
-        <input matInput formControlName="pedidoCodigo">
+        <input matInput formControlName="idpedido">
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Estado Pago</mat-label>
-        <mat-select formControlName="estadoPago">
-          <mat-option *ngFor="let estado of estados" [value]="estado">
-            {{estado}}
+        <mat-select formControlName="idestadopago">
+          <mat-option *ngFor="let estado of estados" [value]="estado.estado">
+            {{estado.estado}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Fecha Limite</mat-label>
-        <input matInput [matDatepicker]="deadlinePicker" formControlName="fechaLimite" />
+        <input matInput [matDatepicker]="deadlinePicker" formControlName="fechalimite" />
         <mat-datepicker-toggle matSuffix [for]="deadlinePicker"></mat-datepicker-toggle>
         <mat-datepicker #deadlinePicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Fecha Pago</mat-label>
-        <input matInput [matDatepicker]="paymentDatePicker" formControlName="fechaPago" />
+        <input matInput [matDatepicker]="paymentDatePicker" formControlName="fechapago" />
         <mat-datepicker-toggle matSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #paymentDatePicker></mat-datepicker>
       </mat-form-field>
 
     </form>
     <div class="action-buttons">
-      <button mat-raised-button color="primary" (click)="onSave()">Guardar todo</button>
+      <button mat-raised-button color="primary" (click)="onSave()">Actualizar</button>
       <button mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
     </div>
   </div>

@@ -1,21 +1,21 @@
 <mat-card class="product-form-card">
   <mat-card-title>Generar Factura Venta</mat-card-title>
-  <form [formGroup]="facturaForm" (ngSubmit)="onSubmit()" class="product-form-grid">
+  <form [formGroup]="agregarFacturaForm" (ngSubmit)="onSubmit()" class="product-form-grid">
     <mat-form-field appearance="fill">
       <mat-label>Codigo Factura</mat-label>
-      <input matInput formControlName="facturaCodigo">
+      <input matInput formControlName="idfactura">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Codigo Pedido</mat-label>
-      <input matInput formControlName="pedidoCodigo">
+      <input matInput formControlName="idpedido" >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Estado Pago</mat-label>
-      <mat-select formControlName="estadoPago">
-        <mat-option *ngFor="let estado of estados" [value]="estado">
-          {{estado}}
+      <mat-select formControlName="idestadopago">
+        <mat-option *ngFor="let estado of estados" [value]="estado.estado">
+          {{estado.estado}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -23,18 +23,11 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Fecha Limite</mat-label>
-      <input matInput [matDatepicker]="deadlinePicker" formControlName="fechaLimite" />
+      <input matInput [matDatepicker]="deadlinePicker" formControlName="fechalimite" />
+      
       <mat-datepicker-toggle matSuffix [for]="deadlinePicker"></mat-datepicker-toggle>
       <mat-datepicker #deadlinePicker></mat-datepicker>
     </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Fecha Pago</mat-label>
-      <input matInput [matDatepicker]="paymentDatePicker" formControlName="fechaPago" />
-      <mat-datepicker-toggle matSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #paymentDatePicker></mat-datepicker>
-    </mat-form-field>
-
 
   </form>
   <div class="action-buttons">

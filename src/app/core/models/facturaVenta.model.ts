@@ -1,7 +1,7 @@
 export interface FacturaVenta {
-  codigo: string;
-  codigopedido: string;
-  estadopago: string;
-  fechalimitedepago: Date;
-  fechapago: Date;
+  idFactura: string;
+  idPedido: string;
+  idEstadoPago: number;
+  fechaLimite: Date;
+  fechaPago: Date;
 }

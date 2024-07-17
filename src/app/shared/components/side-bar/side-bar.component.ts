@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { TokenService } from '../../../modules/auth/services/token-service/token.service';
 
@@ -12,6 +12,7 @@ export class SideBarComponent implements OnInit {
   //? TEST DE ROL
   userRole: string = 'ROL_ALMACEN';
   menuOptions: any[] = [];
+  @Input() rutaSide: string;
 
   constructor(
     private elementRef: ElementRef,
@@ -31,8 +32,6 @@ export class SideBarComponent implements OnInit {
         menuItem.classList.add('active');
       });
     });
-
-
   }
 
   setMenuItemsBasedOnRole() {
@@ -61,6 +60,11 @@ export class SideBarComponent implements OnInit {
         { label: 'Reportes', route: '/adm/reporte', image: 'assets/icons/informe.png' },
         { label: 'Gestionar', route: '/adm/gestionar', image: 'assets/icons/gestion.png' }
       ];
+    }else if (this.userRole === 'ROL_TRANSPORTISTA') {
+      this.menuOptions = [
+        { label: 'Seguimiento', route: '/home/transportistas/seguimiento', image: 'assets/icons/informe.png' },
+      ];
     }
   }
+
 }

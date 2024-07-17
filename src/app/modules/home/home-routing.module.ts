@@ -36,6 +36,11 @@ const routes: Routes = [
     loadChildren: () => import('../compras/compras.module').then(m => m.ComprasModule),
     canActivate: [roleGuard],
     data: { expectedRole: 'ROL_COMPRA' }
+  }, {
+    path: 'transportistas',
+    loadChildren: () => import('../transportista/transportista.module').then(m => m.TransportistaModule),
+    canActivate: [roleGuard],
+    data: { expectedRole: 'ROL_TRANSPORTISTA' }
   }
 ];
 

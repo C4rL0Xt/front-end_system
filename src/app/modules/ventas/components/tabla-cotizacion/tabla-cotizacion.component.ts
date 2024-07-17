@@ -11,12 +11,13 @@ import { ProductoService } from '../../../productos/services/product-service/pro
 import { map, Observable, startWith, switchMap } from 'rxjs';
 import { Product } from '../../../../core/models/product.model';
 import { Estado } from '../../../../core/models/estado.model';
+import { ClienteServiceService } from '../../services/cliente-service.service';
+import { Cliente } from '../../../../core/models/cliente.model';
 
 interface Departamento {
   id: number;
   nombre: string;
 }
-
 
 @Component({
   selector: 'app-tabla-cotizacion',
@@ -38,6 +39,7 @@ export class TablaCotizacionComponent implements OnInit {
   selectedProducto: Product | null = null;
   filteredOptions: Observable<Product[]>[] = [];
   cotizacionesFalsas: cotizacionVenta[] = [];
+  clientes: Cliente[] = [];
 
   departamentos: Departamento[] = [
     { id: 1, nombre: 'MOQUEGUA' },
@@ -66,7 +68,8 @@ export class TablaCotizacionComponent implements OnInit {
     { id: 24, nombre: 'HUANUCO' }
   ];
 
-  @Output() navigateToPedidos: EventEmitter<string> = new EventEmitter<string>();
+  @Output() navigateToPedidos: EventEmitter<{ idcotizacion: string, dni: string }> = new EventEmitter<{ idcotizacion: string, dni: string }>();
+
   estados: Estado[] = [{
     id: 1,
     nombre: 'Pendiente'
@@ -85,7 +88,8 @@ export class TablaCotizacionComponent implements OnInit {
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private cotizacionService: CotiVentaService,
-    private productService: ProductoService
+    private productService: ProductoService,
+    private clienteService: ClienteServiceService
   ) {
 
     this.filterForm = this.fb.group({
@@ -112,6 +116,7 @@ export class TablaCotizacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductos();
+    this.getClientes();
     this.getAllCotizaciones();
 
   }
@@ -127,6 +132,13 @@ export class TablaCotizacionComponent implements OnInit {
     this.productService.getAllProducts().subscribe(products => {
       this.productos = products;
       console.log('Productos:', products);
+    });
+  }
+
+  getClientes(): void {
+    this.clienteService.getAllClients().subscribe(clients => {
+      this.clientes = clients;
+      console.log('Clientes:', clients);
     });
   }
 
@@ -412,8 +424,20 @@ export class TablaCotizacionComponent implements OnInit {
     this.isNewButtonEnabled = false;
   }
 
-  goToPedidos(idcotizacion: string){
-    this.navigateToPedidos.emit(idcotizacion);
+  goToPedidos(idcotizacion: string, dni: string) {
+
+    const clienteEncontrado = this.clientes.find(cliente => cliente.dni === dni);
+
+    if (clienteEncontrado) {
+      this.navigateToPedidos.emit({ idcotizacion: idcotizacion, dni: dni });
+    } else {
+      this.snackBar.open('El cliente no está registrado.', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['snack-bar-warning'],
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
+    }
   }
 
 }

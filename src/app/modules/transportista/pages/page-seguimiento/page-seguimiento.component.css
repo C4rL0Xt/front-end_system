@@ -4,6 +4,38 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
 
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 250px;
+  /* Ancho del sidebar */
+  margin-top: 0;
+  /* Header estará pegado a la parte superior */
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 40px;
+  /* Margen alrededor del tab-container */
+}
+
+.tab-content {
+  padding: 20px;
+  background: #ffffff;
+  /* Fondo suave */
+  width: calc(100% - 20px);
+  /* Restar el margen de 40px a cada lado */
+  margin: auto;
+  border-radius: 12px;
+  /* Bordes redondeados */
+  color: #333;
+  /* Texto oscuro */
+  font-family: 'Roboto', sans-serif;
+}
+
 .mat-card-title {
   font-size: 1.5rem;
   color: #3f51b5;
@@ -58,7 +90,7 @@ mat-icon {
 .filters-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
 }
 
 .filters {
@@ -94,11 +126,10 @@ mat-icon {
   width: 100%;
   margin: 20px auto;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
 }
 
 .product-form-grid {
-  margin-top: 50px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
@@ -109,4 +140,22 @@ mat-icon {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
+}
+
+mat-card  {
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.Detalles{
+  margin-top: 50px;
+  margin-left: 10px;
+}
+
+.detallesped{
+  margin-top: 30px;
+  padding-bottom: 30px;
 }

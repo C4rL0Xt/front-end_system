@@ -5,17 +5,11 @@
       <div *ngIf="selectOption === '/factura/nuevo'">
         <ng-container *ngTemplateOutlet="newFacturaZone"></ng-container>
       </div>
-      <div *ngIf="selectOption === '/factura/editar'">
-        <ng-container *ngTemplateOutlet="editFacturaZone"></ng-container>
-      </div>
     </div>
   </div>
 </div>
 
-<ng-template #newFacturaZone>
-  <app-form-new-fac></app-form-new-fac>
-</ng-template>
-
-<ng-template #editFacturaZone>
-  <app-table-fac></app-table-fac>
+<ng-template #newFacturaZone let-facturaData>
+  <app-form-new-fac (updateTableEvent)="onUpdateTable()" [facturad]="getFacturaData()"></app-form-new-fac>
+  <app-table-fac [updateFlag]="updateFlag"></app-table-fac>
 </ng-template>

@@ -20,5 +20,6 @@ export const environment = {
   api_documentos: 'http://localhost:9000/api/doc-compra',
   api_coti: 'http://localhost:9000/api/cotizacion',
   api_cliente: 'http://localhost:9000/api/cliente',
-  api_pedido: 'http://localhost:9000/api/pedido'
+  api_pedido: 'http://localhost:9000/api/pedido',
+  api_factura: 'http://localhost:9000/api/facturaventa'
 };

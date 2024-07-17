@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'pedidos', component: PagePedidoComponent },
   { path: 'facturas', component: FacturaPageComponent },
   { path: 'seguimiento', component: SeguimientoPageComponent },
+  { path: 'facturas/:idpedido/:fechaentrega', component: FacturaPageComponent }
 ];
 
 @NgModule({

@@ -21,10 +21,12 @@ interface Tab {
 export class PagePedidoComponent implements OnInit {
 
   @Output() seleccionado = new EventEmitter<Tab>();
+  @Output() irAlSide = new EventEmitter<String>();
 
   selectedTab: number = 1;
   selectOption: string = '';
   idCotizacion: string = '';
+  dni: string = '';
 
   tabs = [
     {
@@ -38,7 +40,7 @@ export class PagePedidoComponent implements OnInit {
     {
       label: 'Pedidos',
       route: '/ventas/pedidos/pedidos',
-    },
+    }
   ];
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -56,12 +58,18 @@ export class PagePedidoComponent implements OnInit {
     this.seleccionado.emit(tab); // Emitir el evento con el objeto tab seleccionado
   }
 
-  onNavigateToPedidos(idcotizacion: string){
+  onNavigateToPedidos(event: { idcotizacion: string, dni: string }) {
+    this.idCotizacion = event.idcotizacion;
+    this.dni = event.dni;
     this.onTabSelected('/ventas/pedidos/pedidos');
-    this.idCotizacion = idcotizacion;
-    console.log("La cotizacion fue copiada",this.idCotizacion);
-    console.log("Este es el select Opcion p:",this.selectOption);
-    this.seleccionarTab({label: 'Pedidos',route: '/ventas/pedidos/pedidos'});
+    this.seleccionarTab({ label: 'Pedidos', route: '/ventas/pedidos/pedidos' });
   }
 
+
+  onNavigateToFacturas(event: { idpedido: string, fechaentrega: Date }) {
+    const idpedido = event.idpedido;
+    const fechaentrega = event.fechaentrega;
+    const route = `/home/ventas/facturas/${idpedido}/${fechaentrega.toISOString().split('T')[0]}`;
+    this.router.navigate([route]);
+  }
 }
