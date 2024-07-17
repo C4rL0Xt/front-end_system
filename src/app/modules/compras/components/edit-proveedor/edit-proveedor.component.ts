@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Proveedor } from '../../../../core/models/proveedor.model';
 import { map, Observable } from 'rxjs';
+import { ProveedorService } from '../../services/proveedor-service/proveedor.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { RateProveedorDialogComponent } from '../rate-proveedor-dialog/rate-proveedor-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-proveedor',
@@ -17,9 +23,15 @@ export class EditProveedorComponent implements OnInit {
   filteredOptions: Observable<Proveedor[]>[] = [];
 
   displayedColumns: string[] = ['idproveedor', 'empresa', 'direccion', 'telefono', 'email', 'ruc', 'rate'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private proveedorService: ProveedorService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
 
     this.filterForm = this.fb.group({
       //agregas filtro para tus busquedas
@@ -36,12 +48,22 @@ export class EditProveedorComponent implements OnInit {
       telefono: ['', Validators.required],
       email: ['', Validators.required],
       ruc: ['', Validators.required],
-      rate: ['', Validators.required]
+      rate: [{ value: '', disabled: true }]
 
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.getAllProveedores();
+  }
+
+  getAllProveedores(): void {
+    this.proveedorService.getProveedores$().subscribe(proveedores => {
+      this.dataSource = new MatTableDataSource(proveedores);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+  }
 
   onRowClicked(proveedor: Proveedor): void {
     this.selectedProveedor = proveedor;
@@ -64,6 +86,23 @@ export class EditProveedorComponent implements OnInit {
     console.log('Cotizacion seleccionada:', proveedor);
 
   }
+
+  openRateDialog(): void {
+    const dialogRef = this.dialog.open(RateProveedorDialogComponent, {
+      width: '400px',
+      data: { rate: this.selectedProveedor }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.proveedorForm.patchValue({ rate: result.rate });
+        if (this.selectedProveedor) {
+          this.selectedProveedor.rate = result.rate;
+        }
+      }
+    });
+  }
+
   /*
 
   private _filter(value: string): Observable<Proveedor[]> {
@@ -73,7 +112,25 @@ export class EditProveedorComponent implements OnInit {
     );
   }*/
 
-  onSave(): void { }
+  onSave(): void {
+    if (this.proveedorForm.valid) {
+      const proveedor = this.proveedorForm.getRawValue() as Proveedor;
+      console.log('Proveedor a guardar:', proveedor);
 
-  onCancel(): void { }
+      this.proveedorService.updateProveedor$(proveedor).subscribe((response) => {
+        console.log('Proveedor guardado:', response);
+        this.snackBar.open('Proveedor actualizado', 'Cerrar', { duration: 3000 });
+        this.getAllProveedores();
+        this.proveedorForm.reset();
+      },
+        (error) => {
+          console.error('Error al actualizar proveedor', error);
+          this.snackBar.open('Error al actualizar proveedor', 'Cerrar', { duration: 3000 });
+        });
+    }
+  }
+
+  onCancel(): void {
+    this.proveedorForm.reset();
+  }
 }

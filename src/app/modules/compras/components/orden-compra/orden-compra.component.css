@@ -1,0 +1,39 @@
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.table-responsive {
+  overflow: auto;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+button {
+  margin-top: 20px;
+}

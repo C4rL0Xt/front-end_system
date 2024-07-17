@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Proveedor } from '../../../../core/models/proveedor.model';
+import { ProveedorService } from '../../services/proveedor-service/proveedor.service';
 
 @Component({
   selector: 'app-add-proveedor',
@@ -10,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AddProveedorComponent implements OnInit {
   proveedorForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private proveedorService: ProveedorService) {
     this.proveedorForm = this.fb.group({
       idproveedor: [{ value: '', disabled: true }],
       empresa: ['', Validators.required],
@@ -18,12 +20,12 @@ export class AddProveedorComponent implements OnInit {
       telefono: ['', Validators.required],
       email: ['', Validators.required],
       ruc: ['', Validators.required],
-      rate: ['', Validators.required]
+      rate: [{ value: 0, disabled: true }]
 
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() { this.generateRandomCode(); }
 
   onSubmit(): void {
     if (this.proveedorForm.valid) {
@@ -34,9 +36,38 @@ export class AddProveedorComponent implements OnInit {
     }
   }
 
+  generateRandomCode() {
+    const randomNumber = Math.floor(Math.random() * 10000);
+    const randomCode = `P_${randomNumber.toString().padStart(4, '0')}`;
+    this.proveedorForm.patchValue({ idproveedor: randomCode });
+  }
+
+
   cancel(): void {
     console.log('Cancelado');
   }
 
-  saveEverything(): void { }
+  saveEverything(): void {
+    if (this.proveedorForm.valid) {
+      const proveedor = this.proveedorForm.getRawValue() as Proveedor;
+      console.log('Guardando proveedor', proveedor);
+      this.proveedorService.createProveedor$(proveedor).subscribe(
+        (response) => {
+          console.log('Respuesta de la API', response);
+          this.snackBar.open('Proveedor guardado con exito', 'Cerrar', {
+            duration: 2000,
+          });
+          this.proveedorForm.reset();
+          this.generateRandomCode();
+        },
+        (error) => {
+          console.log('Error al guardar proveedor', error);
+          this.snackBar.open('Error al guardar proveedor', 'Cerrar', {
+            duration: 2000,
+          });
+
+        }
+      );
+    }
+  }
 }

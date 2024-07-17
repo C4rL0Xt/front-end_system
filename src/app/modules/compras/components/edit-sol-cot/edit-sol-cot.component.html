@@ -1,0 +1,63 @@
+<div class="container">
+  <h2>Actualizar Solicitudes de Cotización</h2>
+
+  <form [formGroup]="form">
+    <mat-card class="section" [@slideInOut]>
+      <h3>Seleccionar Solicitud de Compra</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Solicitudes de Compra</mat-label>
+        <mat-select formControlName="selectedPurchaseRequest" (selectionChange)="onPurchaseRequestSelectionChange($event)">
+          <mat-option *ngFor="let request of purchaseRequests" [value]="request.id_solicitud">
+            <strong><em><u>{{request.id_solicitud}}</u></em></strong> -> <strong>producto:&nbsp;</strong> <em>{{ request.nombreProducto }} </em><strong>&nbsp;cantidad:&nbsp;</strong> <em>{{ request.cantidadRequerida }} </em> <strong>&nbsp;estado:&nbsp;</strong> <em>{{ request.estado }}</em>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card class="section" [@fadeInOut] *ngIf="selectedRequestQuotations.length > 0">
+      <h3>Cotizaciones Recibidas</h3>
+      <div class="table-responsive">
+        <table mat-table [dataSource]="selectedRequestQuotations" class="mat-elevation-z8">
+          <ng-container matColumnDef="nombreProveedor">
+            <th mat-header-cell *matHeaderCellDef>Proveedor</th>
+            <td mat-cell *matCellDef="let element">{{ element.nombreProveedor }}</td>
+          </ng-container>
+          <ng-container matColumnDef="fechaEntregaCotizacion">
+            <th mat-header-cell *matHeaderCellDef>Fecha de Entrega</th>
+            <td mat-cell *matCellDef="let element">{{ element.fechaEntregaCotizacion | date:'mediumDate' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="monto">
+            <th mat-header-cell *matHeaderCellDef>Monto</th>
+            <td mat-cell *matCellDef="let element">{{ element.monto | currency }}</td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let element">
+              <span [ngClass]="{
+                'accepted': element.estado === 'Aceptado',
+                'rejected': element.estado === 'Rechazado',
+                'pending': element.estado === 'Pendiente'
+              }">
+                {{ element.estado | uppercase }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef>Rate</th>
+            <td mat-cell *matCellDef="let element">{{ element.rate }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" (click)="openQuotationDetail(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card>
+  </form>
+</div>

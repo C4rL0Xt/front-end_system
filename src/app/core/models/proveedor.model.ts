@@ -1,9 +1,14 @@
+import { Caracteristica } from "./caracterisitca.model";
+
 export interface Proveedor {
-  idproveedor: number;
+  idproveedor: string;
   empresa: string;
   direccion: string;
   telefono: string;
   email: string;
   ruc: string;
-  rate: string;
+  calidad?: number;
+  precio?: number;
+  cumplimiento?: number;
+  rate: number;
 }

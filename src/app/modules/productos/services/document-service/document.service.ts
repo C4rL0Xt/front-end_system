@@ -127,4 +127,19 @@ export class DocumentService {
   updateGuiaRemision(guia: any): Observable<any> {
     return this.http.put(`${this.URL}/guias/update`, guia);
   }
+
+  getAllSolicitudCompraPendiente$(): Observable<any[]> {
+    return this.http.get(`${this.URL_DOC}/solicitud/listarpendientes`).pipe(
+      map((response: any) => {
+        console.log("Respuesta completa de la API-compra: ", response);
+        return response;
+      }),
+      catchError((err) => {
+        alert('Error de conexion');
+        const { status, statusText } = err;
+        console.log('Algo paso revisar', [status, statusText]);
+        return of([]);
+      })
+    );
+  }
 }

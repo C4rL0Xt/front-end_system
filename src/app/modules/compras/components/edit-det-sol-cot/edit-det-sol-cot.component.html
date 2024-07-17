@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Detalle de Cotización</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field class="full-width">
+    <mat-label>Proveedor</mat-label>
+    <input matInput formControlName="nombreProveedor" readonly>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label>Fecha de Entrega</mat-label>
+    <input matInput formControlName="fechaEntregaCotizacion" type="date">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label>Monto</mat-label>
+    <input matInput formControlName="monto" type="number">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label>Estado</mat-label>
+    <mat-select formControlName="estado">
+      <mat-option *ngFor="let estado of estados" [value]="estado.viewValue">
+        {{ estado.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <mat-label>Rate</mat-label>
+    <input matInput formControlName="rate" readonly>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button color="primary" (click)="onSave()">Guardar</button>
+</mat-dialog-actions>

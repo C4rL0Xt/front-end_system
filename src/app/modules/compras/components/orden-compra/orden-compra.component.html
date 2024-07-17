@@ -1,0 +1,76 @@
+<div class="container">
+  <h2>Generar Orden de Compra</h2>
+
+  <form [formGroup]="form" class="order-form">
+    <mat-card class="section" [@slideInOut]>
+      <h3>Seleccionar Solicitud de Compra</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Solicitudes de Compra</mat-label>
+        <mat-select formControlName="selectedPurchaseRequest" (selectionChange)="onPurchaseRequestSelectionChange($event)">
+          <mat-option *ngFor="let request of purchaseRequests" [value]="request.id_solicitud">
+            {{ request.nombreProducto }} - {{ request.cantidadRequerida }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card class="section" *ngIf="quotations.length > 0" [@fadeInOut]>
+      <h3>Cotizaciones Aceptadas</h3>
+      <mat-form-field class="full-width">
+        <mat-label>Cotizaciones</mat-label>
+        <mat-select formControlName="selectedQuotation" (selectionChange)="onQuotationSelectionChange($event)">
+          <mat-option *ngFor="let quotation of quotations" [value]="quotation.idsolicitudcompra">
+            {{ quotation.nombreProveedor }} - {{ quotation.monto | currency }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card class="section" [@slideInOut]>
+      <h3>Detalles de la Orden de Compra</h3>
+      <div class="grid-container">
+        <mat-form-field class="full-width">
+          <mat-label>ID Solicitud de Cotización</mat-label>
+          <input matInput formControlName="id_solicitud_cotizacion" readonly>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>ID Proveedor</mat-label>
+          <input matInput formControlName="id_proveedor" readonly>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Fecha de Emisión</mat-label>
+          <input matInput formControlName="fecha_emision" readonly>
+        </mat-form-field>
+      </div>
+      <div class="button-container">
+        <button mat-raised-button color="primary" (click)="onSaveOrder()" [@bounceIn]>Guardar Orden</button>
+      </div>
+    </mat-card>
+  </form>
+
+  <mat-card class="section" *ngIf="orders.length > 0" [@fadeInOut]>
+    <h3>Órdenes de Compra Creadas</h3>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="orders" class="mat-elevation-z8">
+        <ng-container matColumnDef="id_orden_compra">
+          <th mat-header-cell *matHeaderCellDef>ID Orden</th>
+          <td mat-cell *matCellDef="let element">{{ element.id_orden_compra }}</td>
+        </ng-container>
+        <ng-container matColumnDef="id_solicitud_cotizacion">
+          <th mat-header-cell *matHeaderCellDef>ID Solicitud</th>
+          <td mat-cell *matCellDef="let element">{{ element.id_solicitud_cotizacion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="id_proveedor">
+          <th mat-header-cell *matHeaderCellDef>ID Proveedor</th>
+          <td mat-cell *matCellDef="let element">{{ element.id_proveedor }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fecha_emision">
+          <th mat-header-cell *matHeaderCellDef>Fecha de Emisión</th>
+          <td mat-cell *matCellDef="let element">{{ element.fecha_emision | date:'mediumDate' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

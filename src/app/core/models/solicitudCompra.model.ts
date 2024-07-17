@@ -2,9 +2,8 @@ export interface Solicitud {
   id_solicitud: string;
   nombreProducto: string;
   cantidadRequerida: string;
-  plazoEntrega: string;
+  plazoEntrega: Date
   identificacion: string;
   codigoempleado?: string;
   estado: string;
-
 }
