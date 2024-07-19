@@ -72,4 +72,10 @@ export class PagePedidoComponent implements OnInit {
     const route = `/home/ventas/facturas/${idpedido}/${fechaentrega.toISOString().split('T')[0]}`;
     this.router.navigate([route]);
   }
+
+  navigateToClientes(event: string) {
+    const idcoti = event;
+    const route = `/home/ventas/clientes/${idcoti}`;
+    this.router.navigate([route]);
+  }
 }

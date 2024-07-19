@@ -10,10 +10,10 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './factura-page.component.html',
   styleUrl: './factura-page.component.css'
 })
-export class FacturaPageComponent implements OnInit{
+export class FacturaPageComponent implements OnInit {
 
   updateFlag = false;
-  
+
   selectedTab: number = 1;
   selectOption: string = '/factura/nuevo';
 
@@ -40,7 +40,6 @@ export class FacturaPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    // Obtener los parámetros de la URL cuando se inicializa el componente
     this.route.params.subscribe(params => {
       this.idPedido = params['idpedido'];
       this.fechaEntrega = new Date(params['fechaentrega']);
@@ -48,15 +47,13 @@ export class FacturaPageComponent implements OnInit{
   }
 
   getFacturaData(): any {
-    // Aquí podrías usar this.idPedido y this.fechaEntrega según lo necesario para tu lógica
     return {
       idPedido: this.idPedido,
       fechaEntrega: this.fechaEntrega
-      // Otros datos de la factura si es necesario
     };
   }
 
-  onUpdateTable(){
+  onUpdateTable() {
     this.updateFlag = !this.updateFlag;
   }
 

@@ -7,10 +7,17 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Pedido } from '../../../../core/models/pedido.model';
 import { TransportistaService } from '../../service/transportista.service';
-import { MetodoPago, EstadoEnvio } from '../../../ventas/components/view-pedido/view-pedido.component';
 import { ProfileService } from '../../../../shared/services/profile/profile.service';
 
+export interface MetodoPago {
+  idMetodoPago: number;
+  metodo: string;
+}
 
+export interface EstadoEnvio {
+  idEstadoEnvio: number;
+  estado: string;
+}
 
 @Component({
   selector: 'app-page-seguimiento',
@@ -80,12 +87,12 @@ export class PageSeguimientoComponent implements OnInit {
 
   pedidoEntregado(): void {
     this.loadIDEmpleado();
-    this.pedidoService.marcarPedidoEntregado(this.pedidos,this.idpedido, this.idEmpleado).subscribe(
+    this.pedidoService.marcarPedidoEntregado(this.pedidos, this.idpedido, this.idEmpleado).subscribe(
       response => {
         console.log('Pedido entregado:', response);
         console.log("Enviando id de trams: ", this.idEmpleado);
         this.snackBar.open('Pedidos actualizados a En tránsito', 'Cerrar', { duration: 3000 });
-        this.loadPedidosListosYEnTransito(); 
+        this.loadPedidosListosYEnTransito();
       },
       error => {
         console.error('Error al actualizar pedidos:', error);
@@ -116,7 +123,7 @@ export class PageSeguimientoComponent implements OnInit {
   }
 
   loadPedidosListosYEnTransito() {
-    this.pedidoService.getPedidosEnviar().subscribe((response: Pedido[]) => {
+    this.pedidoService.getPedidosEnviar(localStorage.getItem('idempleado')).subscribe((response: Pedido[]) => {
       console.log("Pedidos recibidos:  ", response);
       this.pedidos = response;
       this.dataSource = new MatTableDataSource(this.pedidos);
@@ -126,17 +133,17 @@ export class PageSeguimientoComponent implements OnInit {
   }
 
   onRowClicked(pedido: Pedido): void {
-    
-      this.idpedido = pedido.idPedido,
-      this.idcotizacion= pedido.idCotizacion,
-      this.idcliente= pedido.idCliente,
-      this.metodopago= this.getMetodoPago(pedido.idMetodoPago),
-      this.estadoenvio= this.getEstadoEnvio(pedido.idEstadoEnvio),
-      this.idempleado= pedido.idEmpleado,
-      this.fechaentrega= pedido.fechaEntrega,
-      this.fechaemision= pedido.fechaEmision
-      console.log("Pedido seleccionado: ",this.idpedido);
-   
+
+    this.idpedido = pedido.idPedido,
+      this.idcotizacion = pedido.idCotizacion,
+      this.idcliente = pedido.idCliente,
+      this.metodopago = this.getMetodoPago(pedido.idMetodoPago),
+      this.estadoenvio = this.getEstadoEnvio(pedido.idEstadoEnvio),
+      this.idempleado = pedido.idEmpleado,
+      this.fechaentrega = pedido.fechaEntrega,
+      this.fechaemision = pedido.fechaEmision
+    console.log("Pedido seleccionado: ", this.idpedido);
+
   }
 
   getEstadoEnvio(id: number): string {
@@ -150,7 +157,7 @@ export class PageSeguimientoComponent implements OnInit {
   }
 
   getIdMetodoPago(metodoN: string): number {
-    console.log("Metodos de pago: ",metodoN);
+    console.log("Metodos de pago: ", metodoN);
     const metodo = this.metodosP.find(m => m.metodo === metodoN);
     if (metodo) {
       return metodo.idMetodoPago;

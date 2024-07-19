@@ -46,12 +46,12 @@
       <input matInput formControlName="fechaemision" type="date">
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field appearance="fill" >
       <mat-label>Email</mat-label>
       <input matInput formControlName="email">
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" >
       <mat-label>Departamento</mat-label>
       <mat-select formControlName="departamento">
         <mat-option *ngFor="let departamento of departamentos" [value]="departamento.id">
@@ -60,7 +60,7 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="product-list">
+    <div class="product-list full-width ">
       <h1><strong>Productos</strong></h1>
       <div formArrayName="detalles">
         <div *ngFor="let detalle of detalles.controls; let i=index" [formGroupName]="i" class="producto-form">
@@ -69,7 +69,7 @@
             <mat-label>Producto</mat-label>
             <input type="text" matInput formControlName="producto" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event.option.value)">
-              <mat-option *ngFor="let option of filteredOptions[i]| async" [value]="option.name">
+              <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option.name">
                 {{option.name}}-{{option.concentracion}}-{{option.presentation}}
               </mat-option>
             </mat-autocomplete>
@@ -91,17 +91,19 @@
         </div>
       </div>
     </div>
-    <div class="action-buttons">
+
+    <div class="action-buttons full-width">
       <button mat-fab extended color="primary" type="button" (click)="addDetalle()" class="color-boton">Nuevo
-        <mat-icon>add</mat-icon></button>
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </form>
-  <div class="action-buttons">
-    <button mat-raised-button color="accent" type="button" (click)="calculateTotal()">Agregar Producto (s)</button>
+
+  <div class="action-buttons full-width">
+    <button mat-raised-button color="accent" type="button" (click)="calculateTotal()">Agregar Producto(s)</button>
   </div>
-  <div class="action-buttons">
-    <button mat-raised-button color="primary" type="submit" class="color-boton-2"
-      (click)="saveEverything()">Guardar</button>
+  <div class="action-buttons full-width">
+    <button mat-raised-button color="primary" type="submit" class="color-boton-2" (click)="saveEverything()">Guardar</button>
     <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancelar</button>
   </div>
 </mat-card>

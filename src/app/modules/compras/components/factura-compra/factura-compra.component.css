@@ -10,6 +10,11 @@
   text-align: center;
 }
 
+.responsive-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 
 .mat-mdc-row .mat-mdc-cell {
   border-bottom: 1px solid transparent;

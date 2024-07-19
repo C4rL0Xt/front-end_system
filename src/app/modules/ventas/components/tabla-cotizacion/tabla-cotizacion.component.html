@@ -121,6 +121,9 @@
             <button mat-icon-button color="primary" (click)="goToPedidos(cotizacion.idcotizacion,cotizacion.dni)">
               <mat-icon>view_list</mat-icon>
             </button>
+            <button mat-icon-button color="primary" (click)="getCotizacionPdf(cotizacion.idcotizacion)">
+              <mat-icon>print</mat-icon>
+            </button>
           </td>
         </ng-container>
 
@@ -166,6 +169,11 @@
       <mat-form-field appearance="fill" fxFlex="50">
         <mat-label>Fecha Emisión</mat-label>
         <input matInput formControlName="fechaemision" type="date">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" fxFlex="50">
+        <mat-label>DNI</mat-label>
+        <input matInput formControlName="dni">
       </mat-form-field>
 
       <mat-form-field appearance="fill" fxFlex="50">

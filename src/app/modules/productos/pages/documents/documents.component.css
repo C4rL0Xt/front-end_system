@@ -193,6 +193,10 @@ h6 {
   /* Espacio entre los contenedores */
 }
 
+
+
+
+
 form {
   display: flex;
   flex-direction: column;
@@ -429,8 +433,10 @@ input::placeholder {
   margin-bottom: 0px;
   background: #ffffff;
   border-radius: 12px;
-  height: 600px;
+  height: auto; /* Ajusta la altura automáticamente */
+  padding: 10px; /* Añadir padding para mejorar la apariencia en pantallas pequeñas */
 }
+
 
 .form-container-guia {
   flex: 1;
@@ -495,6 +501,9 @@ input::placeholder {
   left: 0;
   right: 0;
 }
+.mat-mdc-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
 
 .autocomplete-items div {
   padding: 10px;
@@ -510,6 +519,39 @@ input::placeholder {
 .table-container {
   overflow-x: auto;
   max-height: 37 0px;
+}
+.guia-r-table {
+  border-radius: 10px;
+  background-color: #b4b4b4;
+  width: 100%;
+  font-size: 15px;
+  text-align: left;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+  border-radius: 10px;
+  border-collapse: collapse;
+  border-spacing: 10px 5px;
+}
+
+.guia-r-table th,td{
+  padding: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.table-container-guia {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: auto;
+  margin: 10px auto 0;
+  /* Eliminar el margen inferior y ajustar según sea necesario */
+  margin-top: 0px;
+  width: 100%;
+  background: #f8f8f8;
+  border-radius: 12px;
+  text-align: center;
 }
 
 .filtroestado {

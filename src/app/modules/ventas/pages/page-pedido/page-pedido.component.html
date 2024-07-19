@@ -21,7 +21,7 @@
 </ng-template>
 
 <ng-template #tablaCotizacionZone>
-  <app-tabla-cotizacion (navigateToPedidos)="onNavigateToPedidos($event)"></app-tabla-cotizacion>
+  <app-tabla-cotizacion (emitirIdDeCotizacion)="navigateToClientes($event)" (navigateToPedidos)="onNavigateToPedidos($event)"></app-tabla-cotizacion>
 </ng-template>
 
 <ng-template #pedidosZone>

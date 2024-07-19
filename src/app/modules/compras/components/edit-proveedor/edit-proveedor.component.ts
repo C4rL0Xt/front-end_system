@@ -103,14 +103,7 @@ export class EditProveedorComponent implements OnInit {
     });
   }
 
-  /*
 
-  private _filter(value: string): Observable<Proveedor[]> {
-    const filterValue = value ? value.toString().toLowerCase() : '';
-    return this.productService.getAllProducts().pipe(
-      map(products => products.filter(product => product.name.toLowerCase().includes(filterValue)))
-    );
-  }*/
 
   onSave(): void {
     if (this.proveedorForm.valid) {
@@ -121,16 +114,37 @@ export class EditProveedorComponent implements OnInit {
         console.log('Proveedor guardado:', response);
         this.snackBar.open('Proveedor actualizado', 'Cerrar', { duration: 3000 });
         this.getAllProveedores();
-        this.proveedorForm.reset();
+        this.resetForm();
       },
         (error) => {
           console.error('Error al actualizar proveedor', error);
           this.snackBar.open('Error al actualizar proveedor', 'Cerrar', { duration: 3000 });
         });
+    } else {
+      this.snackBar.open('Por favor completa el formulario correctamente', 'Cerrar', { duration: 2000 });
     }
   }
 
   onCancel(): void {
+    this.resetForm();
+  }
+
+  resetForm(): void {
     this.proveedorForm.reset();
+    Object.keys(this.proveedorForm.controls).forEach(key => {
+      this.proveedorForm.get(key).setErrors(null);
+      this.proveedorForm.get(key).markAsPristine();
+      this.proveedorForm.get(key).markAsUntouched();
+    });
   }
 }
+
+
+/*
+
+ private _filter(value: string): Observable<Proveedor[]> {
+   const filterValue = value ? value.toString().toLowerCase() : '';
+   return this.productService.getAllProducts().pipe(
+     map(products => products.filter(product => product.name.toLowerCase().includes(filterValue)))
+   );
+ }*/

@@ -6,6 +6,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { CotizacionCompraService } from '../../services/coti-compra-service/cotizacion-compra.service';
 import { CotiBySoli } from '../../../../core/models/cotiBySoli.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DocumentService } from '../../../productos/services/document-service/document.service';
+import { Solicitud } from '../../../../core/models/solicitudCompra.model';
 
 @Component({
   selector: 'app-edit-det-sol-cot',
@@ -36,7 +38,8 @@ export class EditDetSolCotComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private cotizacionService: CotizacionCompraService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private documentService: DocumentService
   ) {
     console.log('Data received in dialog:', data.quotation);
     this.form = this.fb.group({
@@ -63,6 +66,7 @@ export class EditDetSolCotComponent {
         this.snackBar.open('Cotizacion de compra actualizada', 'Cerrar', {
           duration: 3000,
         });
+
         this.dialogRef.close(response);
         this.dialogRef.close({ ...this.data.quotation, ...this.form.getRawValue() });
       },

@@ -3,11 +3,6 @@
     <a routerLink="/home/admin" *ngIf="isAdmin" class="admin-link">Admin</a>
   </div>
   <div class="header_right">
-    <div class="header_notification">
-      <button class="header_notificacion_btn">
-        <img src="assets/icons/empty_notification.svg" class="notification_icon">
-      </button>
-    </div>
     <div class="header_user">
       <div *ngIf="empleado" class="user_name">{{empleado.nombre}} {{empleado.apellido}}</div>
       <img src="assets/icons/account.svg" class="account_icon">

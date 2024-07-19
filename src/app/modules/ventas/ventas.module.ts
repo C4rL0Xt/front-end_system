@@ -5,7 +5,7 @@ import { VentasRoutingModule } from './ventas-routing.module';
 import { PageClienteComponent } from './pages/page-cliente/page-cliente.component';
 import { PagePedidoComponent } from './pages/page-pedido/page-pedido.component';
 import { FacturaPageComponent } from './pages/factura-page/factura-page.component';
-import { SeguimientoPageComponent } from './pages/seguimiento-page/seguimiento-page.component';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { MatInputModule } from '@angular/material/input';
@@ -28,7 +28,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormCotizacionComponent } from './components/form-cotizacion/form-cotizacion.component';
 import { DetalleCotizacionComponent } from './components/detalle-cotizacion/detalle-cotizacion.component';
-import { ViewPedidoComponent } from './components/view-pedido/view-pedido.component';
+
 import { FormPedidoComponent } from './components/form-pedido/form-pedido.component';
 import { TablaCotizacionComponent } from './components/tabla-cotizacion/tabla-cotizacion.component';
 import { FormNewFacComponent } from './components/form-new-fac/form-new-fac.component';
@@ -39,10 +39,8 @@ import { TableFacComponent } from './components/table-fac/table-fac.component';
     PageClienteComponent,
     PagePedidoComponent,
     FacturaPageComponent,
-    SeguimientoPageComponent,
     FormCotizacionComponent,
     DetalleCotizacionComponent,
-    ViewPedidoComponent,
     FormPedidoComponent,
     TablaCotizacionComponent,
     FormNewFacComponent,

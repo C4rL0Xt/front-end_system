@@ -12,8 +12,8 @@ export class TransportistaService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getPedidosEnviar(): Observable<any[]> {
-    return this.httpClient.get(`${this.URL}/pedido/pedidosenviar`).pipe(
+  getPedidosEnviar(idempleado: string): Observable<any[]> {
+    return this.httpClient.get(`${this.URL}/pedido/pedidosenviar/${idempleado}`).pipe(
       map((response: any) => {
         console.log("Respuesta completa de la API: ", response);
         return response;
@@ -27,7 +27,7 @@ export class TransportistaService {
     )
   }
 
-  updatePedidosEnTransito(pedidos: any[],idEmpleado : String): Observable<any> {
+  updatePedidosEnTransito(pedidos: any[], idEmpleado: String): Observable<any> {
     return this.httpClient.post(`${this.URL}/pedido/actualizarAEnTransito`, { pedidos, idEmpleado }).pipe(
       map((response: any) => {
         console.log("Pedidos actualizados: ", response);
@@ -42,8 +42,8 @@ export class TransportistaService {
     );
   }
 
-  marcarPedidoEntregado(pedidos: any[],idpedido:String, idEmpleado : String): Observable<any> {
-    return this.httpClient.post(`${this.URL}/pedido/pedidoEntregado`, { pedidos,idpedido, idEmpleado }).pipe(
+  marcarPedidoEntregado(pedidos: any[], idpedido: String, idEmpleado: String): Observable<any> {
+    return this.httpClient.post(`${this.URL}/pedido/pedidoEntregado`, { pedidos, idpedido, idEmpleado }).pipe(
       map((response: any) => {
         console.log("Pedido actualizado: ", response);
         return response;

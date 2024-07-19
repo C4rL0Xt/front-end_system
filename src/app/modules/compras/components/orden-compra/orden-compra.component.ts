@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud } from '../../../../core/models/solicitudCompra.model';
@@ -8,6 +8,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentService } from '../../../productos/services/document-service/document.service';
 import { CotizacionCompraService } from '../../services/coti-compra-service/cotizacion-compra.service';
 import { OrdenCompraService } from '../../services/orden-compra-service/orden-compra.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-orden-compra',
@@ -49,6 +52,10 @@ export class OrdenCompraComponent implements OnInit {
   quotations: CotiBySoli[] = [];
   orders: Order[] = [];
   displayedColumns: string[] = ['id_orden_compra', 'id_solicitud_cotizacion', 'id_proveedor', 'fecha_emision'];
+  dataSource: MatTableDataSource<Order>;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -60,9 +67,9 @@ export class OrdenCompraComponent implements OnInit {
     this.form = this.fb.group({
       selectedPurchaseRequest: ['', Validators.required],
       selectedQuotation: ['', Validators.required],
-      id_solicitud_cotizacion: ['', Validators.required],
-      id_proveedor: ['', Validators.required],
-      fecha_emision: [this.formatDate(new Date()), Validators.required]
+      id_solicitud_cotizacion: [{ value: '', disabled: true }, Validators.required],
+      id_proveedor: [{ value: '', disabled: true }, Validators.required],
+      fecha_emision: [{ value: this.formatDate(new Date()), disabled: false }, Validators.required]
     });
   }
 
@@ -73,7 +80,8 @@ export class OrdenCompraComponent implements OnInit {
 
   loadPurchaseRequests(): void {
     this.documentService.getAllSolicitudCompra().subscribe((solicitudes: Solicitud[]) => {
-      this.purchaseRequests = solicitudes;
+
+      this.purchaseRequests = solicitudes.filter(s => s.estado === 'Aceptado');
     },
       error => {
         console.error('Error loading purchase requests', error);
@@ -89,6 +97,9 @@ export class OrdenCompraComponent implements OnInit {
     this.orderService.getOrdersCompra$().subscribe(
       (orders: Order[]) => {
         this.orders = orders;
+        this.dataSource = new MatTableDataSource(orders);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error => {
         console.error('Error loading orders', error);
@@ -125,7 +136,7 @@ export class OrdenCompraComponent implements OnInit {
 
   onSaveOrder(): void {
     if (this.form.valid) {
-      const newOrder: Order = this.form.value;
+      const newOrder: Order = this.form.getRawValue();
       const ordenCompra = {
         id_orden_compra: newOrder.id_orden_compra,
         id_solicitud_cotizacion: newOrder.id_solicitud_cotizacion,
@@ -148,9 +159,7 @@ export class OrdenCompraComponent implements OnInit {
           });
         }
       );
-      //newOrder.id_orden_compra = (this.orders.length + 1).toString(); // Generar ID ficticio
-      //this.orders.push(newOrder);
-      //this.orders = [...this.orders]; // Forzar detección de cambios
+
 
     }
   }

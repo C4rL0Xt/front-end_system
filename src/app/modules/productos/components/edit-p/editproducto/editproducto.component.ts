@@ -6,6 +6,8 @@ import { Product } from '../../../../../core/models/product.model';
 import { estadoOperativo } from '../../../../../core/models/estadoOperativo.model';
 import { estadoDisponibilidad } from '../../../../../core/models/estadoDisponibilidad.model';
 import { estadoSeguridad } from '../../../../../core/models/estadoSeguridad.model';
+import { ProfileService } from '../../../../../shared/services/profile/profile.service';
+import { DocumentService } from '../../../services/document-service/document.service';
 
 @Component({
   selector: 'app-editproducto',
@@ -24,7 +26,9 @@ export class EditproductoComponent implements OnInit, OnChanges {
 
   @Input() product: Product | null = null;
 
-  constructor(private fb: FormBuilder, private productService: ProductoService, private snackBar: MatSnackBar) {
+  constructor(private fb: FormBuilder, private productService: ProductoService, private snackBar: MatSnackBar,
+    private profileService: ProfileService, private documentService: DocumentService
+  ) {
     this.productForm = this.fb.group({
       code: [{ value: '', disabled: true }],
       name: [{ value: '', disabled: true }, Validators.required],
@@ -32,8 +36,8 @@ export class EditproductoComponent implements OnInit, OnChanges {
       type: [{ value: '', disabled: true }, Validators.required],
       price: [{ value: '', disabled: true }, [Validators.required, Validators.min(0)]],
       concentracion: [{ value: '', disabled: true }, [Validators.required, Validators.min(0)]],
-      presentation: [{ value: '', disabled: true }, Validators.required],
-      description: [{ value: '', disabled: true }, Validators.required]
+      presentation: ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
 
@@ -102,20 +106,37 @@ export class EditproductoComponent implements OnInit, OnChanges {
         }))
       };
 
-      console.log('ProductoPresentationDto:', productoPresentationDto);
+      const hojaIngreso = {
+        idhoja: 'a',
+        idempleado: this.profileService.getIdEmpleado(),
+        fechaingreso: new Date(),
+        detalles: [
+          {
+            idproducto: productData.code,
+            cantidad: this.totalQuantity
+          }
+        ]
+      };
 
+
+      console.log('ProductoPresentationDto:', productoPresentationDto);
+      console.log('Hoja de ingreso:', hojaIngreso);
+      let productSaved = false;
       this.productService.updateProduct(productoPresentationDto).subscribe(
         (response) => {
           console.log('Product Saved successfully:', response);
-          this.snackBar.open('Producto actualizado exitosamente!', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['snack-bar-success'],
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-          });
-          this.productForm.reset();
-          this.lots = [];
-          this.totalQuantity = undefined;
+          productSaved = true;
+          if (productSaved) {
+            this.documentService.createHojaIngreso(hojaIngreso).subscribe((response) => {
+              console.log('Hoja de ingreso guardada exitosamente:', response);
+              this.snackBar.open('Productos y lotes guardados exitosamente!', 'Cerrar', { duration: 3000 });
+
+            });
+            this.productForm.reset();
+            this.lots = [];
+            this.totalQuantity = undefined;
+          }
+
         },
         (error) => {
           console.error('Error al guardar el producto:', error);

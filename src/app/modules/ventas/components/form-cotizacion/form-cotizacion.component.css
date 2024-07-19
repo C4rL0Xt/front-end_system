@@ -17,19 +17,26 @@ mat-form-field {
 }
 
 .full-width {
-  grid-column: span 2;
+  grid-column: span 2; /* Asegura que ocupe todo el ancho en el grid */
 }
 
 .product-list {
-  grid-column: span 4;
+  grid-column: span 2; /* Asegura que ocupe todo el ancho en el grid */
   margin-top: 20px;
 }
 
 .producto-form {
   display: flex;
+  flex-direction: column; /* Ajuste para columnas en pantallas pequeñas */
   gap: 10px;
   align-items: center;
   margin-bottom: 10px;
+}
+
+@media (min-width: 600px) {
+  .producto-form {
+    flex-direction: row; /* Cambiar a filas en pantallas más grandes */
+  }
 }
 
 .add-product-button {
@@ -37,10 +44,17 @@ mat-form-field {
 }
 
 .action-buttons {
-  grid-column: span 2;
+  grid-column: span 2; /* Asegura que ocupe todo el ancho en el grid */
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+}
+
+@media (max-width: 599px) {
+  .action-buttons {
+    flex-direction: column; /* Ajuste para columnas en pantallas pequeñas */
+    gap: 10px;
+  }
 }
 
 ::ng-deep .snack-bar-success {
@@ -76,11 +90,13 @@ mat-form-field {
   }
 }
 
+.spacer {
+  height: 20px; /* Espacio entre el formulario principal y la lista de productos */
+}
 .color-boton {
   background-color: #2cc498 !important;
 }
 
 .color-boton-2 {
-  background-color:
-    #909090 !important;
+  background-color: #909090 !important;
 }

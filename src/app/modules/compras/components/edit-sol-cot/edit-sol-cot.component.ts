@@ -125,7 +125,8 @@ export class EditSolCotComponent implements OnInit {
         if (index !== -1) {
           this.selectedRequestQuotations[index] = result;
           this.selectedRequestQuotations = [...this.selectedRequestQuotations];
-
+          this.loadSolicitudesCompra();
+          this.onPurchaseRequestSelectionChange({ value: this.id_selected });
         }
       }
     });

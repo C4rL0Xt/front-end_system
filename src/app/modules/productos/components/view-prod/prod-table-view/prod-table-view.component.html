@@ -1,6 +1,7 @@
 <mat-card>
   <mat-card-title class="titulo">Productos</mat-card-title>
   <div class="mat-elevation-z8">
+   <div class="responsive-table-container">
     <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
       <!-- Columns Definition -->
@@ -59,6 +60,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
+   </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </mat-card>

@@ -51,6 +51,21 @@ export class CotiVentaService {
     return this.http.post<cotizacionVenta>(`${this.URL}/coti-v/calculate`, cotizacionVenta);
   }
 
+  getCotizacionById(id: string): Observable<any> {
+    return this.http.get(`${this.URL}/coti-v/buscar-coti-dto/${id}`).pipe(
+      map((response: any) => {
+        console.log("Respuesta completa de la API-coti: ", response);
+        return response;
+      }),
+      catchError((err) => {
+        alert('Error de conexion');
+        const { status, statusText } = err;
+        console.log('Algo paso revisar', [status, statusText]);
+        return of([]);
+      })
+    );
+  }
+
   createCotizacionVenta(cotizacion: cotizacionVenta): Observable<any> {
     return this.http.post(`${this.URL}/coti-v/create`, cotizacion).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -76,5 +91,9 @@ export class CotiVentaService {
     return this.http.delete(`${this.URL}/coti-v/delete/detalle`, { body: detalle });
   }
 
+
+  getCotizacionPdf(id: string): Observable<any> {
+    return this.http.get(`${this.URL}/coti-v/pdf/${id}`, { responseType: 'blob' });
+  }
 
 }

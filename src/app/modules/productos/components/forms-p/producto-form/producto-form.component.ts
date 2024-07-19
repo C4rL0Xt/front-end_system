@@ -206,6 +206,7 @@ export class ProductoFormComponent implements OnInit {
               horizontalPosition: 'center',
             });
             this.productForm.reset();
+            this.loadLastCode();
             this.lots = [];
             this.totalQuantity = undefined;
           }, (error) => {

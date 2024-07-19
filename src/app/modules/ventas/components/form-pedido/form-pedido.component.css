@@ -15,6 +15,11 @@
   /* Header estará pegado a la parte superior */
 }
 
+.responsive-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .tab-container {
   display: flex;
   flex-direction: column;

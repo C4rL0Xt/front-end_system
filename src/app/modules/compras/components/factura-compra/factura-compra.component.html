@@ -9,7 +9,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
               <mat-label>Buscar por Fecha Límite</mat-label>
-              <input matInput [matDatepicker]="fechaLimitePicker" (dateChange)="applyFilter($event, 'fechaLimite')" formControlName="fechaLimite" placeholder="Fecha Límite">
+              <input matInput [matDatepicker]="fechaLimitePicker" (dateChange)="applyFilter($event, 'fechaLimite')" formControlName="fechalimite" placeholder="Fecha Límite">
               <mat-datepicker-toggle matSuffix [for]="fechaLimitePicker"></mat-datepicker-toggle>
               <mat-datepicker #fechaLimitePicker></mat-datepicker>
             </mat-form-field>
@@ -18,42 +18,44 @@
         </div>
       </form>
     <div class="mat-elevation-z8">
-        
-      
-
+      <div class="responsive-table-container">
         <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
-            <!-- Columns Definition -->
-            <ng-container matColumnDef="codigofactura">
-                <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-                <td class="font-test" mat-cell *matCellDef="let factura">
-                    {{factura.idFactura}}
-                </td>
-            </ng-container>
+          <!-- Columns Definition -->
+          <ng-container matColumnDef="codigofactura">
+              <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+              <td class="font-test" mat-cell *matCellDef="let factura">
+                  {{factura.idFactura}}
+              </td>
+          </ng-container>
 
-            <ng-container matColumnDef="codigoorden">
-                <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Codigo de orden </th>
-                <td class="font-test" mat-cell *matCellDef="let factura">
-                    {{factura.idOrdenCompra}} </td>
-            </ng-container>
+          <ng-container matColumnDef="codigoorden">
+              <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Codigo de orden </th>
+              <td class="font-test" mat-cell *matCellDef="let factura">
+                  {{factura.idOrdenCompra}} </td>
+          </ng-container>
 
-            <ng-container matColumnDef="fechalimit">
-                <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Límite </th>
-                <td class="font-test" mat-cell *matCellDef="let factura">
-                    {{factura.fecha_limite | date: 'dd/MM/yyyy' }} </td>
-            </ng-container>
+          <ng-container matColumnDef="fechalimite">
+              <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Límite </th>
+              <td class="font-test" mat-cell *matCellDef="let factura">
+                  {{factura.fecha_limite | date: 'dd/MM/yyyy' }} </td>
+          </ng-container>
 
-            <ng-container matColumnDef="fechapago">
-                <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de pago </th>
-                <td class="font-test" mat-cell *matCellDef="let factura">
-                    {{ (factura.fecha_pago | date: 'dd/MM/yyyy')}}
-                </td>
-            </ng-container>
+          <ng-container matColumnDef="fechapago">
+              <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de pago </th>
+              <td class="font-test" mat-cell *matCellDef="let factura">
+                  {{ (factura.fecha_pago | date: 'dd/MM/yyyy')}}
+              </td>
+          </ng-container>
 
-            <!-- Header and Row Declarations -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+          <!-- Header and Row Declarations -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      </div>
+
+
 
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>

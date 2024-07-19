@@ -115,14 +115,11 @@
         <option *ngFor="let hoja of uniqueHojas" [value]="hoja">{{ hoja }}</option>
       </select>
       <select id="filterProducto" (change)="applyFilter()">
-        <option value="">ID Producto</option>
+        <option value="">Nombre Producto</option>
         <option *ngFor="let producto of uniqueProductos" [value]="producto">{{ producto }}</option>
       </select>
-      <select id="filterEmpleado" (change)="applyFilter()">
-        <option value="">ID Empleado</option>
-        <option *ngFor="let empleado of uniqueEmpleados" [value]="empleado">{{ empleado }}</option>
-      </select>
       <input id="filterFecha" type="date" (input)="applyFilter()" />
+      <button type="button" (click)="resetFilters()">Reset</button>
     </div>
 
     <div class="table-container">
@@ -154,7 +151,7 @@
                 <li *ngFor="let detalle of hoja.detalles">{{ detalle.cantidad }}</li>
               </ul>
             </td>
-            <td>{{ hoja.fechaingreso }}</td>
+            <td>{{ hoja.fechaingreso | date: 'dd/MM/yyyy' }}</td>
           </tr>
         </tbody>
       </table>
@@ -162,13 +159,14 @@
   </div>
 </ng-template>
 
+
 <ng-template #nuevaGuiaZone>
   <div class="form-and-empty">
     <div class="container-guia">
-      <div class="table-container">
+      <div class="table-container-guia">
         <h2 class="table-title">Guias de remision</h2>
         <div class="table-scroll">
-          <table>
+          <table class="guia-r-table">
             <thead>
               <tr>
                 <th>ID Guia</th>
@@ -192,8 +190,10 @@
         <form [formGroup]="updateGuiaForm" (ngSubmit)="onUpdateSubmit()">
           <div class="container-solo-labels-actualizacion">
             <h6>Actualizacion de datos</h6>
-            <label>Id de guia: {{ updateGuiaForm.get('idguia')?.value }}</label>
-            <label>Empleado: {{ updateGuiaForm.get('idempleado')?.value }}</label>
+            <label>Id de Guia</label>
+            <input id="idguia" formControlName="idguia" />
+            <label>Empleado</label>
+            <input id="idempleado" formControlName="idempleado" />
             <div class="button-containerAct">
               <button type="submit" (click)="updateGuia()">Actualizar</button>
               <button type="button" (click)="onUpdateCancel()">Cancelar</button>
@@ -232,8 +232,21 @@
           <button type="button" (click)="onCancel()">Cancelar</button>
         </div>
       </form>
+      <br>
+      <div>
+        <mat-list>
+          <div mat-subheader>Pedidos a atender</div>
+          @for (pedido of pedidoPendiente; track pedido) {
+            <mat-list-item (click)="onSelectPedido(pedido)">
+              <mat-icon matListItemIcon>description</mat-icon>
+              <div matListItemTitle>{{pedido.idPedido}}</div>
+              <div matListItemLine>{{pedido.fechaEmision| date}}</div>
+            </mat-list-item>
+          }
+          <mat-divider></mat-divider>
+        </mat-list>
+      </div>
     </div>
 
   </div>
-
 </ng-template>

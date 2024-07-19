@@ -20,73 +20,75 @@
     </div>
     <mat-card-title class="titulo">Pedidos</mat-card-title>
     <div class="mat-elevation-z8">
+      <div class="responsive-table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
-      <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+          <!-- Columns Definition -->
+          <ng-container matColumnDef="idpedido">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idPedido}}
+            </td>
+          </ng-container>
 
-        <!-- Columns Definition -->
-        <ng-container matColumnDef="idpedido">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idPedido}}
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="idcotizacion">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Pedido </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+              {{pedido.idCotizacion}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="idcotizacion">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Pedido </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.idCotizacion}} </td>
-        </ng-container>
+          <ng-container matColumnDef="idcliente">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> idCliente </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idCliente}}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="idcliente">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> idCliente </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idCliente}}
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="metodopago">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Metodo pago </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+              {{getMetodoPago(pedido.idMetodoPago)}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="metodopago">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Metodo pago </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{getMetodoPago(pedido.idMetodoPago)}} </td>
-        </ng-container>
+          <ng-container matColumnDef="estadoenvio">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Estado Envio </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+              {{getEstadoEnvio(pedido.idEstadoEnvio)}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="estadoenvio">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Estado Envio </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{getEstadoEnvio(pedido.idEstadoEnvio)}} </td>
-        </ng-container>
+          <ng-container matColumnDef="idempleado">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Codigo empleado </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idEmpleado}}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="idempleado">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Codigo empleado </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)"> {{pedido.idEmpleado}}
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="fechaentrega">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de entrega</th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+              {{pedido.fechaEntrega | date: 'dd/MM/yyyy' }}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="fechaentrega">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de entrega</th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.fechaEntrega | date: 'dd/MM/yyyy' }}
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="fechaemision">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de emision </th>
+            <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
+              {{pedido.fechaEmision | date: 'dd/MM/yyyy'}}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="fechaemision">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de emision </th>
-          <td class="font-test" mat-cell *matCellDef="let pedido" (click)="onRowClicked(pedido)">
-            {{pedido.fechaEmision | date: 'dd/MM/yyyy'}}
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="actions">
+            <th class="font-cabecera" mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let factura">
+              <button mat-icon-button color="primary">
+                <mat-icon>view_list</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th class="font-cabecera" mat-header-cell *matHeaderCellDef> Actions </th>
-          <td mat-cell *matCellDef="let factura">
-            <button mat-icon-button color="primary">
-              <mat-icon>view_list</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+          <!-- Header and Row Declarations -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
 
-        <!-- Header and Row Declarations -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      </div>
 
       <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>

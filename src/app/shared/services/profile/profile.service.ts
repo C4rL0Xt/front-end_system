@@ -27,6 +27,7 @@ export class ProfileService implements OnInit {
     return this.http.get(`${this.URL}/empleados/data/${email}`).pipe(
       map((response: any) => {
         this.setIdEmpleado(response.idempleado);
+        localStorage.setItem('idempleado', response.idempleado);
         this.getIdEmpleado()
         console.log('Respuesta completa de la API: ', response);
         return response;

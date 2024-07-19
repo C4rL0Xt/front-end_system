@@ -6,6 +6,9 @@ import { ProfileService } from '../../../../shared/services/profile/profile.serv
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HojaIngreso } from '../../../../core/models/hojaingreso.model';
 import { GuiasRemision } from '../../../../core/models/guias.model';
+import { PedidoService } from '../../../ventas/services/pedido-service/pedido.service';
+import { Pedido } from '../../../../core/models/pedido.model';
+import { ProductoService } from '../../services/product-service/producto.service';
 
 
 
@@ -20,6 +23,8 @@ import { GuiasRemision } from '../../../../core/models/guias.model';
 export class DocumentsComponent implements OnInit {
   last_code_solicitud: string;
   last_code_guia: string;
+
+  pedidoPendiente: Pedido[] = [];
 
   formGuia = [
     {
@@ -83,23 +88,29 @@ export class DocumentsComponent implements OnInit {
   crearSolicitudForm: FormGroup = new FormGroup({});
   updateSolicitudForm: FormGroup = new FormGroup({});
   crearGuiaForm: FormGroup = new FormGroup({});
-  updateGuiaForm: FormGroup = new FormGroup({});
-
+  updateGuiaForm: FormGroup;
 
   solicitudes: any = []; //pa mis productos ficticios
   guias: GuiasRemision[] = [];
 
   filteredSolicitudes: Solicitud[] = [];
   estadoFilter: string = '';
-  hojas: HojaIngreso[] = [];
 
-  constructor(private fb: FormBuilder, private documentService: DocumentService, private profileService: ProfileService, private snackBar: MatSnackBar) {
+  hojas: HojaIngreso[] = [];
+  uniqueHojas: string[] = [];
+  uniqueProductos: string[] = [];
+  uniqueEmpleados: string[] = [];
+  filteredHojas: HojaIngreso[] = [];
+  filteredProductNames: string[] = [];
+
+  constructor(private fb: FormBuilder, private documentService: DocumentService, private productoService: ProductoService,
+    private pedidoService: PedidoService, private profileService: ProfileService, private snackBar: MatSnackBar) {
     this.crearSolicitudForm = this.fb.group({
       id_solicitud: [{ value: '', disabled: true }],
       nombreProducto: ['', Validators.required],
       cantidadRequerida: ['', Validators.required],
       plazoEntrega: ['', Validators.required],
-      identificacion: ['', Validators.required],
+      identificacion: [{ value: 'EMP004', disabled: true }, Validators.required],
       estado: [{ value: 'Pendiente', disabled: true }],
     });
 
@@ -115,36 +126,32 @@ export class DocumentsComponent implements OnInit {
     });
 
     this.crearGuiaForm = this.fb.group({
-      idguia: ['', Validators.required],
-      idempleado: ['', Validators.required],
+      idguia: [{ value: '', disabled: true }, Validators.required],
+      idempleado: [{ value: localStorage.getItem('idempleado'), disabled: true }, Validators.required],
       idpedido: ['', Validators.required],
       fechaentrega: ['', Validators.required]
     });
 
     this.updateGuiaForm = this.fb.group({
-      idguia: [''],
+      idguia: [{ value: '', disabled: true }],
       idempleado: [{ value: '', disabled: true }],
-      idpedido: ['', Validators.required],
+      idpedido: [{ value: '', disabled: true }, Validators.required],
       fechaentrega: ['', Validators.required]
     });
   }
 
 
-  filteredHojas = [...this.hojas];
-  uniqueHojas = [];
-  uniqueProductos = [];
-  uniqueEmpleados = [];
-  filteredProductNames = [];
 
   ngOnInit(): void {
     this.generateGuiaId();
-    this.getUniqueValues();
+
     this.filteredHojas = [...this.hojas];
     this.loadSolicitudes();
     this.loadLastCodeSolicitud();
     this.loadHojaIngreso();
     this.loadGuiaRemision();
     this.loadLsatCodeGuia();
+    this.loadPedidosEnPreparacion();
   }
 
   /* desde la api */
@@ -276,8 +283,16 @@ export class DocumentsComponent implements OnInit {
       console.log('Respuesta completa de la API:', response);
       this.hojas = response;
       this.filteredHojas = this.hojas;
+      this.getUniqueValues();
     });
   }
+
+  getUniqueValues(): void {
+    this.uniqueHojas = [...new Set(this.hojas.map(hoja => hoja.idhoja))];
+    this.uniqueProductos = [...new Set(this.hojas.flatMap(hoja => hoja.detalles.map(detalle => detalle.nombreProducto)))];
+    this.uniqueEmpleados = [...new Set(this.hojas.map(hoja => hoja.idempleado))];
+  }
+
 
   loadGuiaRemision(): void {
     this.documentService.getAllGuiaRemision().subscribe((response: GuiasRemision[]) => {
@@ -309,6 +324,7 @@ export class DocumentsComponent implements OnInit {
         });
         this.crearGuiaForm.reset();
         this.loadAllDataGuia();
+        this.loadPedidosEnPreparacion();
 
       }, (error) => {
         console.error('Error al guardar la guia de remision', error);
@@ -322,7 +338,7 @@ export class DocumentsComponent implements OnInit {
 
   updateGuia(): void {
     if (this.updateGuiaForm.valid) {
-      const guiaData = this.updateGuiaForm.value;
+      const guiaData = this.updateGuiaForm.getRawValue();
       const guiadto = {
         idguiaremision: guiaData.idguia,
         idempleado: this.profileService.getIdEmpleado(),
@@ -347,6 +363,17 @@ export class DocumentsComponent implements OnInit {
         this.snackBar.open('Error al guardar la guia de remision', 'Cerrar', { duration: 3000 });
       });
     }
+  }
+
+
+  loadPedidosEnPreparacion(): void {
+    this.pedidoService.getAllPedidos().subscribe((response: Pedido[]) => {
+      this.pedidoPendiente = response.filter(pedido => pedido.idEstadoEnvio === 1);
+    });
+  }
+
+  onSelectPedido(pedido: Pedido): void {
+    this.crearGuiaForm.patchValue({ idpedido: pedido.idPedido });
   }
 
   /* ------ fin api */
@@ -393,7 +420,7 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
-  selectRowGuia(guia: any): void {
+  selectRowGuia(guia: GuiasRemision): void {
     this.updateGuiaForm.patchValue({
       idguia: guia.idguiaremision,
       idempleado: guia.idempleado,
@@ -446,33 +473,28 @@ export class DocumentsComponent implements OnInit {
 
   //hOJAS DE INGRESO
 
-  getUniqueValues() {
-    this.uniqueHojas = [...new Set(this.hojas.map(hoja => hoja.idhoja))];
-    this.uniqueProductos = [...new Set(this.hojas.map(hoja => hoja.idhoja))];
-    this.uniqueEmpleados = [...new Set(this.hojas.map(hoja => hoja.idempleado))];
-  }
-  applyFilter() {
+
+  applyFilter(): void {
     const idHoja = (document.getElementById('filterIdHoja') as HTMLSelectElement).value.toLowerCase();
     const idProducto = (document.getElementById('filterProducto') as HTMLSelectElement).value.toLowerCase();
-    const empleado = (document.getElementById('filterEmpleado') as HTMLSelectElement).value.toLowerCase();
-    const fecha = (document.getElementById('filterFecha') as HTMLInputElement).value.toString();
+    const fecha = (document.getElementById('filterFecha') as HTMLInputElement).value;
 
     this.filteredHojas = this.hojas.filter(hoja => {
-      return (
-        (!idHoja || hoja.idhoja.toString().toLowerCase().includes(idHoja)) &&
-        (!idProducto || hoja.idhoja.toString().toLowerCase().includes(idProducto)) &&
-        (!empleado || hoja.idempleado.toString().toLowerCase().includes(empleado)) &&
-        (!fecha || hoja.fechaingreso.toISOString().includes(fecha))
-      );
+      const matchesIdHoja = !idHoja || hoja.idhoja.toLowerCase().includes(idHoja);
+      const matchesIdProducto = !idProducto || hoja.detalles.some(detalle => detalle.nombreProducto?.toLowerCase().includes(idProducto));
+      const matchesFecha = !fecha || new Date(hoja.fechaingreso).toISOString().includes(fecha);
+      return matchesIdHoja && matchesIdProducto && matchesFecha;
     });
   }
 
-  filterProductNames() {
-    const input = (document.getElementById('filterNombreProducto') as HTMLInputElement).value.toLowerCase();
-    this.filteredProductNames = this.uniqueProductos.filter(producto =>
-      producto.toLowerCase().includes(input)
-    );
+  resetFilters(): void {
+    (document.getElementById('filterIdHoja') as HTMLSelectElement).value = '';
+    (document.getElementById('filterProducto') as HTMLSelectElement).value = '';
+    (document.getElementById('filterFecha') as HTMLInputElement).value = '';
+    this.filteredHojas = this.hojas;
   }
+
+
 
   selectProductName(producto: string) {
     (document.getElementById('filterNombreProducto') as HTMLInputElement).value = producto;

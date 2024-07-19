@@ -37,7 +37,7 @@ export class SideBarComponent implements OnInit {
   setMenuItemsBasedOnRole() {
     if (this.userRole === 'ROL_ALMACEN') {
       this.menuOptions = [
-        { label: 'Inicio', route: '/home/almacen/inicio', image: 'assets/icons/hogar.png' },
+
         { label: 'Producto', route: '/home/almacen/productos', image: 'assets/icons/medicina.png' },
         { label: 'Documentos', route: '/home/almacen/documentos', image: 'assets/icons/documentos.png' }
       ];
@@ -51,8 +51,7 @@ export class SideBarComponent implements OnInit {
       this.menuOptions = [
         { label: 'Clientes', route: '/home/ventas/clientes', image: 'assets/icons/audiencia.png' },
         { label: 'Pedidos', route: '/home/ventas/pedidos', image: 'assets/icons/orden.png' },
-        { label: 'Facturas', route: '/home/ventas/facturas', image: 'assets/icons/factura.png' },
-        { label: 'Seguimiento', route: '/home/ventas/seguimiento', image: 'assets/icons/seguimiento.png' }
+        { label: 'Facturas', route: '/home/ventas/facturas', image: 'assets/icons/factura.png' }
       ];
 
     } else if (this.userRole === 'ROLE_ADMIN') {
@@ -60,7 +59,7 @@ export class SideBarComponent implements OnInit {
         { label: 'Reportes', route: '/adm/reporte', image: 'assets/icons/informe.png' },
         { label: 'Gestionar', route: '/adm/gestionar', image: 'assets/icons/gestion.png' }
       ];
-    }else if (this.userRole === 'ROL_TRANSPORTISTA') {
+    } else if (this.userRole === 'ROL_TRANSPORTISTA') {
       this.menuOptions = [
         { label: 'Seguimiento', route: '/home/transportistas/seguimiento', image: 'assets/icons/informe.png' },
       ];

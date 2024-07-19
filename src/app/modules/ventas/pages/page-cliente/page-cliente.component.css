@@ -2,14 +2,14 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 250px; /* Ancho del sidebar */
-  margin-top: 0; /* Header estará pegado a la parte superior */
+  margin-left: 250px;
+  margin-top: 0;
 }
 
 .tab-container {
   display: flex;
   flex-direction: column;
-  margin: 20px 40px; /* Margen alrededor del tab-container */
+  margin: 20px 40px;
 }
 
 .tab-content {
@@ -20,9 +20,21 @@
   border-radius: 12px;
 }
 
+.font-test {
+  font-family: "Courier Prime", monospace;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.font-cabecera {
+  font-family: "Oxygen", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .product-form-card {
   width: 100%;
-  height: 500px;
+  height: auto;
   margin: 20px auto;
   padding-top: 20px;
   padding-left: 50px;
@@ -33,7 +45,7 @@
 .product-form-grid {
   margin-top: 40px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 12px;
   width: 95%;
 }
@@ -54,14 +66,15 @@ mat-card-title {
 }
 
 .button-container {
-  margin-top: 100px;
-  width: 700px;
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .button-container button {
   padding: 10px;
-  width: 20%;
-  height: 50px;
+  width: 150px;
   font-size: 17px;
   background-color: #45b385cc;
   color: #ffffff;
@@ -69,12 +82,11 @@ mat-card-title {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
-  margin-right: 50px; /* Espacio entre los botones */
 }
 
 .button-container button:hover {
-  background-color: rgba(55, 140, 104, 0.8); /* Color al pasar el mouse */
-  transform: translateY(-2px); /* Efecto de levantamiento */
+  background-color: rgba(55, 140, 104, 0.8);
+  transform: translateY(-2px);
 }
 
 .button-container button[disabled] {
@@ -82,62 +94,9 @@ mat-card-title {
   cursor: not-allowed;
 }
 
-.formulario-editar {
-  padding-bottom: 10px;
-  margin-top: 0px;
-  border-radius: 12px;
-  padding-left: 25px;
-  background-color: #fafafa;
-}
-
-.button-container-editar {
-  width: 300px;
-  background-color: #fafafa;
-}
-
-.button-container-editar button {
-  width: 35%;
-  height: 40px;
-  font-size: 17px;
-  background-color: #45b385cc;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  margin-right: 20px;
-}
-
-.button-container-editar button:hover {
-  background-color: rgba(55, 140, 104, 0.8); /* Color al pasar el mouse */
-  transform: translateY(-2px); /* Efecto de levantamiento */
-}
-
-.button-container-editar button[disabled] {
-  background-color: #45b385cc;
-  cursor: not-allowed;
-}
-
-.formulario-editar mat-form-field {
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
-  width: 300px;
-  background-color: #fafafa;
-}
-
-.editar {
-  margin-top: 20px;
-  padding-top: 1px;
-  padding-bottom: 20px;
-  padding-left: 25px;
-  background-color: #fafafa;
-  border-radius: 12px;
-}
-
 .product-form-card-editar {
   width: 100%;
-  height: 600px;
+  height: auto;
   margin: 20px auto;
   padding-left: 20px;
   margin-top: 2px;
@@ -148,16 +107,16 @@ mat-card-title {
 .tabla-clientes-card {
   margin-top: 10px;
   width: 100%;
-  box-shadow: none !important; /* Eliminar la sombra */
-  border: none !important; /* Eliminar el borde */
+  box-shadow: none !important;
+  border: none !important;
   margin-left: 30px;
   padding-right: 60px;
 }
 
 .mat-table {
   width: 100%;
-  box-shadow: none !important; /* Eliminar la sombra */
-  border: none !important; /* Eliminar el borde */
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .mat-header-cell {
@@ -170,11 +129,11 @@ mat-card-title {
 }
 
 .mat-header-row {
-  background-color: #f0f0f0; /* Color de fondo de la fila de cabecera */
+  background-color: #f0f0f0;
 }
 
 .mat-row:nth-child(even) {
-  background-color: #f9f9f9; /* Color de fondo de las filas pares */
+  background-color: #f9f9f9;
 }
 
 .mat-cell.actions-cell {
@@ -187,63 +146,80 @@ mat-card-title {
   margin: 0 5px;
 }
 
-.mat-elevation-z8 {
-  max-height: 450px; /* Altura máxima de la tabla */
-  overflow: auto; 
-  margin-top: 25px;
-  box-shadow: none !important; /* Eliminar la sombra */
-}
-
 .search-container {
   margin-top: 12px;
   margin-left: 10px;
   display: flex;
   align-items: center;
   max-width: 400px;
-  /* Adjust maximum width of the search container */
 }
 
 .search-field {
   flex: 1;
-  /* Expand to fill remaining space */
   max-width: 300px;
-  /* Adjust maximum width of the search field */
   margin-right: 15px;
-  /* Adjust spacing between search field and button */
 }
 
 .search-button {
   min-width: 0;
   margin-top: -15px;
-  /* Ensure button doesn't expand unnecessarily */
+}
+
+.responsive-table-container {
+  overflow-x: auto;
+}
+
+.mat-elevation-z8 {
+  overflow-x: auto;
+  max-height: 500px;
+}
+
+.full-width-table {
+  width: 100%;
 }
 
 @media screen and (max-width: 768px) {
   .main-content {
-    margin-left: 0;
+      margin-left: 0;
   }
 
   .tab-content {
-    padding: 10px;
+      padding: 10px;
   }
 
-  .product-form-card, .product-form-card-editar, .tabla-clientes-card {
-    width: 100%;
-    margin-left: 0;
-    padding-left: 10px;
+  .product-form-card,
+  .product-form-card-editar,
+  .tabla-clientes-card {
+      width: 100%;
+      margin-left: 0;
+      padding-left: 10px;
   }
 
-  .button-container, .button-container-editar {
-    flex-direction: column;
-    align-items: center;
+  .button-container {
+      flex-direction: column;
+      align-items: center;
   }
 
-  .button-container button, .button-container-editar button {
-    width: 100%;
-    margin: 10px 0;
+  .button-container button {
+      width: 100%;
+      margin: 10px 0;
   }
 
   .product-form-grid {
-    grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+  }
+
+  .responsive-table-container {
+      width: 100%;
+      overflow-x: auto;
+  }
+
+  .full-width-table {
+      width: 100%;
+      overflow: auto;
+  }
+
+  .mat-elevation-z8 {
+      padding: 16px;
   }
 }

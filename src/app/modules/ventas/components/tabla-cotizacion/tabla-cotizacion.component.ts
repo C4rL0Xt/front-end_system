@@ -32,6 +32,8 @@ export class TablaCotizacionComponent implements OnInit {
 
   isNewButtonEnabled = false;
 
+  @Output() emitirIdDeCotizacion: EventEmitter<string> = new EventEmitter<string>();
+
   cotizacionControl = new FormControl();
   selectedCotizacion: cotizacionVenta | null = null;
   displayedColumns: string[] = ['idcotizacion', 'idempleado', 'estado', 'dni', 'nombrecliente', 'montoproducto', 'fechaemision', 'email', 'montoimpuesto', 'montototal', 'departamento', 'actions'];
@@ -110,6 +112,7 @@ export class TablaCotizacionComponent implements OnInit {
       montoimpuesto: [{ value: '', disabled: true }],
       montototal: [{ value: '', disabled: true }],
       departamento: ['', Validators.required],
+      dni: ['', Validators.required],
       detalles: this.fb.array([])
     });
   }
@@ -281,6 +284,7 @@ export class TablaCotizacionComponent implements OnInit {
       montoproducto: cotizacion.montoproducto,
       fechaemision: fechaEmision,
       email: cotizacion.email,
+      dni: cotizacion.dni,
       montoimpuesto: cotizacion.montoimpuesto,
       montototal: cotizacion.montototal,
       departamento: departamentoSeleccionado ? departamentoSeleccionado.nombre : ''
@@ -431,6 +435,7 @@ export class TablaCotizacionComponent implements OnInit {
     if (clienteEncontrado) {
       this.navigateToPedidos.emit({ idcotizacion: idcotizacion, dni: dni });
     } else {
+      this.emitirIdDeCotizacion.emit(idcotizacion);
       this.snackBar.open('El cliente no está registrado.', 'Cerrar', {
         duration: 3000,
         panelClass: ['snack-bar-warning'],
@@ -438,6 +443,20 @@ export class TablaCotizacionComponent implements OnInit {
         horizontalPosition: 'center',
       });
     }
+  }
+
+  getCotizacionPdf(idcotizacion: string) {
+    this.cotizacionService.getCotizacionPdf(idcotizacion).subscribe(
+      (response) => {
+        console.log('Respuesta:', response);
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      (error) => {
+        console.error('Error al obtener el PDF de la cotización', error);
+      }
+    );
   }
 
 }
