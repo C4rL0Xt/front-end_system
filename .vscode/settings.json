@@ -1,0 +1,8 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/4ca2f9d0-3c08-4779-8a8f-0fab4b2024da/resourceGroups/bbraunapp/providers/Microsoft.Web/sites/front-bbraun",
+    "appService.deploySubpath": "dist\\bbraun-client\\browser",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}

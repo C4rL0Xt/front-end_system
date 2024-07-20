@@ -164,10 +164,14 @@ export class PageClienteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.idcoti = params['idcoti'];
+      if(JSON.stringify(params) != '{}'){
+        console.log("entrando a route: ",params);
+        this.idcoti = params['idcoti'];
+        this.cargarDatosDeCotizacion(this.idcoti);
+      }
     });
 
-    this.cargarDatosDeCotizacion(this.idcoti);
+    
 
     this.generateRandomCode();
     this.loadDepartamentos();
